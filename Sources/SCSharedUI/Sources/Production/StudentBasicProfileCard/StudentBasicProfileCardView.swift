@@ -25,8 +25,11 @@ struct StudentBasicProfileCardView: View {
             SDText("Ram Kumar", style: .size200(weight: .medium, theme: .primary))
             SDText("XI-B | Roll no: 04", style: .size100(weight: .regular, theme: .secondry))
             Spacer(minLength: Sizing.sizing2x)
-            SDButton("Connect", buttonType: .primaryButton(.size100(weight: .regular, theme: .standard, alignment: .leading)), spacing: Sizing.sizing2x, maxWidth: true)
-            
+            SDButton("Connect",
+                     buttonType: .primaryButton(.size100(weight: .regular, theme: .standard, alignment: .leading)),
+                     spacing: Sizing.sizing2x, maxSize: true) {
+                
+            }
         }
     }
 }
