@@ -1,8 +1,8 @@
 import SCTokens
 import SwiftUI
 
-struct AppInitializiation {
-    static func initialize() {
+public struct AppInitializiation {
+    public static func initialize() {
         Font.loadMyFonts
     }
 }
