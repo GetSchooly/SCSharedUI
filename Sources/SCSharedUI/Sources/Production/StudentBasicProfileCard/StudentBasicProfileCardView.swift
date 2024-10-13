@@ -2,10 +2,22 @@ import SwiftUI
 import SCTokens
 import SCComponents
 
-struct StudentBasicProfileCardView: View {
-    var body: some View {
+public struct StudentBasicProfileCardView: View {
+    
+//    init() {
+//        Font.loadMyFonts
+//    }
+    public var body: some View {
         VStack(alignment: .leading) {
-            profileImage
+            HStack(alignment: .top) {
+                profileImage
+                Spacer()
+                SDText("PAID", style: .size50(weight: .bold, theme: .standard))
+                    .padding(Sizing.sizing0xHalf + Sizing.sizing0xQuarter)
+                    .background(.green)
+                    .clipShape(.rect(cornerRadius: Sizing.sizing1x))
+            }
+            .padding(.bottom, Spacing.spacing2x)
             studentBasicInfoView
         }
         .padding(Spacing.spacing4x)
@@ -18,24 +30,31 @@ struct StudentBasicProfileCardView: View {
         SDImage(.remote(url: "https://picsum.photos/seed/picsum/200/300"))
             .frame(width: Constants.profileImageSize, height: Constants.profileImageSize, alignment: .center)
             .clipShape(.circle)
+            .border(.init(
+                cornerRadius: Constants.profileImageSize/Sizing.sizing0xHalf,
+                color: .royalBlue10,
+                width: Sizing.sizing2x)
+            )
     }
     
     private var studentBasicInfoView: some View {
         VStack(alignment: .leading) {
-            SDText("Ram Kumar", style: .size200(weight: .medium, theme: .primary))
-            SDText("XI-B | Roll no: 04", style: .size100(weight: .regular, theme: .secondry))
-            Spacer(minLength: Sizing.sizing2x)
+            SDText("Ram Kumar", style: .size100(weight: .bold, theme: .primary))
+            SDText("XI-B | Roll no: 04", style: .size90(weight: .regular, theme: .secondry))
+            Spacer(minLength: Sizing.sizing3x)
             SDButton("Connect",
-                     buttonType: .primaryButton(.size100(weight: .regular, theme: .standard, alignment: .leading)),
+                     buttonType: .primaryButton(.size90(weight: .semiBold, theme: .standard, alignment: .leading)),
                      spacing: Sizing.sizing2x, maxSize: true) {
                 
             }
+                     .frame(height: Constants.connectButtonHeight)
         }
     }
 }
 
 private struct Constants {
-    static let profileImageSize = 80.0
+    static let profileImageSize: CGFloat = 60.0
+    static let connectButtonHeight: CGFloat = 32
 }
 
 extension StudentBasicProfileCardView: HasExamples {
@@ -44,4 +63,9 @@ extension StudentBasicProfileCardView: HasExamples {
             StudentBasicProfileCardView()
         }]
     }
+}
+
+#Preview {
+    StudentBasicProfileCardView()
+        .frame(width: 200, height: 180)
 }
