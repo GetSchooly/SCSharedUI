@@ -3,11 +3,8 @@ import SCTokens
 import SCComponents
 
 public struct MyChildrenView: View {
+    public init() {}
     
-//    init() {
-//        Font.loadMyFonts
-//    }
-//    
     public var body: some View {
         GeometryReader { geometry in
             VStack {

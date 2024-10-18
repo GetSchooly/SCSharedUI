@@ -4,9 +4,10 @@ import SCComponents
 
 public struct StudentBasicProfileCardView: View {
     
-//    init() {
-//        Font.loadMyFonts
-//    }
+    public init() {
+        
+    }
+    
     public var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
