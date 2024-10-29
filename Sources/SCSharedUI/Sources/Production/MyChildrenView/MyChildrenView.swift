@@ -9,13 +9,13 @@ public struct MyChildrenView: View {
         GeometryReader { geometry in
             VStack {
                 titleAndFindMoreView
-                    .frame(height: Spacing.spacing2x)
-                    .padding(.horizontal, Spacing.spacing4x)
                 ScrollView(.horizontal) {
                     MyChildrenGridView(proxy: geometry)
                 }
                 .scrollIndicators(.never)
             }
+            .padding(.bottom, Spacing.spacing3x)
+            .background(Color.white)
         }
     }
     
@@ -30,6 +30,9 @@ public struct MyChildrenView: View {
                 
             }
         }
+        .padding(.horizontal, Spacing.spacing4x)
+        .frame(width: nil, height: Spacing.spacing5x)
+        //.background(Color.red)
     }
 }
 
@@ -37,7 +40,7 @@ private struct MyChildrenGridView: View {
     
     let proxy: GeometryProxy
     
-    private let items = 1...50
+    private let items = 1...3
     private let columns = [
         GridItem(.adaptive(minimum: 120))
     ]
@@ -55,7 +58,7 @@ private struct MyChildrenGridView: View {
 }
 
 private struct Constants {
-    static let gridViewHeight: CGFloat = 212
+    static let gridViewHeight: CGFloat = 204
     static let rowHeight: CGFloat = 180
 }
 

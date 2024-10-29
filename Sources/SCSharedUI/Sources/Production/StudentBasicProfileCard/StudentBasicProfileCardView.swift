@@ -22,7 +22,7 @@ public struct StudentBasicProfileCardView: View {
             studentBasicInfoView
         }
         .padding(Spacing.spacing4x)
-        .background(Color.appBackground)
+        .background(Color.white)
         .clipShape(.rect(cornerRadius: Sizing.sizing4x))
         .shadow(SDElevation.defaultGrayElevation)
     }
