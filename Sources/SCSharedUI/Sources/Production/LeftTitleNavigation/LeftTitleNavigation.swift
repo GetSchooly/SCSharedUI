@@ -24,6 +24,7 @@ public struct LeftTitleNavigationView: View {
                 onNotificationAction()
             }
         }
+        .background(Color.clear)
         .padding(.vertical, Spacing.spacing1x)
     }
 }

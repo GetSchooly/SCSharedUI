@@ -18,6 +18,7 @@ public struct ThoughtOfTheDayView: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: Spacing.spacing2x) {
             SDText("Thought of the day", style: .size100(weight: .semiBold, theme: .primary))
+                .frame(height: Sizing.sizing5x)
             thoughtView
         }
         .padding(.horizontal, Spacing.spacing4x)

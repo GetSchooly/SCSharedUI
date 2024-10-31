@@ -18,6 +18,7 @@ public struct LearnAnythingView: View {
         VStack(spacing: Spacing.spacing2x) {
             HStack {
                 SDText("Learn Anything", style: .size100(weight: .semiBold, theme: .primary))
+                    .frame(height: Sizing.sizing5x)
                 Spacer()
             }
             thoughtView
@@ -42,18 +43,18 @@ public struct LearnAnythingView: View {
                 SDText("Nothing here yet", style: .size400(weight: .semiBold, theme: .primary, alignment: .center))
                     .padding(.bottom, Spacing.spacing3x)
                 
-                SDText("Ask something to Edu Buddy, which you don’t understand ", style: .size300(weight: .medium, theme: .primary, alignment: .center))
+                SDText("Ask something to Edu Buddy, which you don’t understand ", style: .size300(weight: .medium, theme: .darkGray, alignment: .center))
                     .padding(.bottom, Spacing.spacing4x)
                 
-                SDButton("Start with AI Tutor", buttonType: .primaryButton(.size300(weight: .medium, theme: .standard, alignment: .center)), maxSize: true, onTapAction: {
+                SDButton("Start with AI Tutor", buttonType: .primaryButton(.size200(weight: .semiBold, theme: .standard, alignment: .center)), maxSize: true, onTapAction: {
                     
                 })
-                .frame(maxWidth: .infinity, maxHeight: Sizing.sizing12x)
+                .frame(height: Sizing.sizing12x)
             }
         }
         .padding(Spacing.spacing4x)
         .background(Color.white)
-        .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .lightGray, width: Sizing.sizing0xQuarter))
+        .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.5), width: Sizing.sizing0xQuarter))
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
     

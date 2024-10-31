@@ -14,14 +14,12 @@ public struct MyChildrenView: View {
                 }
                 .scrollIndicators(.never)
             }
-            .padding(.bottom, Spacing.spacing3x)
-            .background(Color.white)
         }
     }
     
     @ViewBuilder
     private var titleAndFindMoreView: some View {
-        HStack {
+        HStack(alignment: .center) {
             SDText("My Children", style: .size100(weight: .semiBold, theme: .primary, alignment: .leading))
             Spacer()
             SDButton("Find your children",
@@ -32,7 +30,6 @@ public struct MyChildrenView: View {
         }
         .padding(.horizontal, Spacing.spacing4x)
         .frame(width: nil, height: Spacing.spacing5x)
-        //.background(Color.red)
     }
 }
 
@@ -50,14 +47,14 @@ private struct MyChildrenGridView: View {
             Spacer(minLength: -Spacing.spacing1x)
             ForEach(items, id: \.self) { item in
                 StudentBasicProfileCardView()
-                    .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Constants.rowHeight)
+                    .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Sizing.rowHeight)
             }
         }
-        .frame(height: Constants.gridViewHeight)
+        .frame(height: Sizing.gridViewHeight)
     }
 }
 
-private struct Constants {
+private struct Sizing {
     static let gridViewHeight: CGFloat = 204
     static let rowHeight: CGFloat = 180
 }
