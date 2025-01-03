@@ -14,6 +14,7 @@ public struct MyChildrenView: View {
                 }
                 .scrollIndicators(.never)
             }
+            .scrollIndicators(.never)
         }
     }
     
@@ -29,6 +30,7 @@ public struct MyChildrenView: View {
             }
         }
         .padding(.horizontal, Spacing.spacing4x)
+        .padding(.bottom, -Spacing.spacing3x)
         .frame(width: nil, height: Spacing.spacing5x)
     }
 }
@@ -36,21 +38,29 @@ public struct MyChildrenView: View {
 private struct MyChildrenGridView: View {
     
     let proxy: GeometryProxy
+    @State private var contentSizeHeight = CGFloat.zero
     
     private let items = 1...3
     private let columns = [
-        GridItem(.adaptive(minimum: 120))
+        GridItem()
     ]
 
     var body: some View {
-        LazyHGrid(rows: columns, alignment: .center, spacing: Spacing.spacing4x) {
-            Spacer(minLength: -Spacing.spacing1x)
+        LazyHGrid(rows: columns, spacing: Spacing.spacing4x) {
+            Spacer(minLength: Spacing.spacing1x)
             ForEach(items, id: \.self) { item in
                 StudentBasicProfileCardView()
                     .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Sizing.rowHeight)
+                    .overlay {
+                        GeometryReader(content: { geometry in
+                            Color.clear.onAppear(perform: {
+                                contentSizeHeight = geometry.size.height
+                            })
+                        })
+                    }
             }
         }
-        .frame(height: Sizing.gridViewHeight)
+        .frame(height: contentSizeHeight + Spacing.spacing6x)
     }
 }
 

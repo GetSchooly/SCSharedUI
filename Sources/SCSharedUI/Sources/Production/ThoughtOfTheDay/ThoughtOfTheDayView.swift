@@ -36,7 +36,7 @@ public struct ThoughtOfTheDayView: View {
         .frame(maxWidth: .infinity)
         .padding(Spacing.spacing4x)
         .background(Color.lightBlue)
-        .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing3x))
+        .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
     
     private func setupUI() {

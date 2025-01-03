@@ -21,12 +21,12 @@ struct BlogCardView: View {
                 .padding(.bottom, Spacing.spacing3x)
                 .clipped()
                 
-            SDText("The Power of Fiction and Fiction and N...", style: .size300(weight: .semiBold, theme: .darkGray))
+            SDText("The Power of Fiction and Fiction and N...", style: .size200(weight: .semiBold, theme: .darkGray))
                 .padding(.bottom, -Spacing.spacing0xHalf)
                 .lineLimit(1)
                 
             
-            SDText("When asked about her reading preferences, Rishika enthusiastically...", style: .size200(weight: .regular, theme: .darkGray))
+            SDText("When asked about her reading preferences, Rishika enthusiastically...", style: .size100(weight: .regular, theme: .darkGray))
                 .lineLimit(2)
                 
     
@@ -40,7 +40,8 @@ struct BlogCardView: View {
         }
         .padding(Sizing.sizing4x)
         .background(Color.white)
-        .border(.init(cornerRadius: Sizing.sizing4x, color: .lightGray.opacity(0.3), width: 1.0))
+        .border(.init(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.3), width: 1.0))
+        .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
     
     private func setupUI() {
@@ -54,5 +55,5 @@ struct BlogCardView: View {
 }
 
 #Preview {
-    BlogCardView()
+    BlogCardView().padding()
 }

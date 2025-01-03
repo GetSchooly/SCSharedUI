@@ -54,7 +54,7 @@ public struct LearnAnythingView: View {
         }
         .padding(Spacing.spacing4x)
         .background(Color.white)
-        .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.5), width: Sizing.sizing0xQuarter))
+        .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.3), width: Sizing.sizing0xQuarter))
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
     

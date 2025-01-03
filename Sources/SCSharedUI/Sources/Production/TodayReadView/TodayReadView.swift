@@ -57,6 +57,7 @@ private struct BlogCardList: View {
                 }
             }
         }
+        .scrollIndicators(.never)
     }
 }
 
