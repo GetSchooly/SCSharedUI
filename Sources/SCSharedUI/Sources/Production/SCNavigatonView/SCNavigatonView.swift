@@ -34,6 +34,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
                                 .padding(.trailing, Spacing.spacing3x)
                         })
                     }
+                    .frame(height: 44)
                     contentView
                 }
                 .navigationBarHidden(true)
@@ -64,23 +65,19 @@ public struct SCNavigatonView<Content>: View where Content: View {
     
     @ViewBuilder
     private var righButtonView: some View {
-        if !hideBackButton {
-            if rightButtons.isEmpty {
-                Rectangle().fill(Color.clear).frame(width: Spacing.spacing12x)
-            } else {
-                HStack {
-                    Spacer()
-                    ForEach(0..<rightButtons.count, id: \.self) { index in
-                        rightButtons[index]
-                            .frame(width: Sizing.sizing10x, height:  Sizing.sizing10x)
-                            .padding(.trailing, -Spacing.spacing2x)
-                    }
-                }
-                .frame(maxWidth: Sizing.sizing3x * Sizing.sizing2xHalf)
-                .clipped()
-            }
+        if rightButtons.isEmpty {
+            Rectangle().fill(Color.clear).frame(width: Spacing.spacing12x)
         } else {
-            EmptyView()
+            HStack {
+                Spacer()
+                ForEach(0..<rightButtons.count, id: \.self) { index in
+                    rightButtons[index]
+                        .frame(width: Sizing.sizing10x, height:  Sizing.sizing10x)
+                        .padding(.trailing, -Spacing.spacing2x)
+                }
+            }
+            .frame(maxWidth: Sizing.sizing3x * Sizing.sizing2xHalf)
+            .clipped()
         }
     }
 }
