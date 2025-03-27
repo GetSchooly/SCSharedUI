@@ -8,39 +8,39 @@ public struct SCNavigatonView<Content>: View where Content: View {
     private let hideBackButton: Bool
     private let rightButtons: [AnyView]
     private let content: Content
+    public var onTapBack: (() -> Void)?
     
-    public init(title: String, hideBackButton: Bool = false, rightButtons: [AnyView] = [], content: Content) {
+    public init(title: String, hideBackButton: Bool = false, rightButtons: [AnyView] = [], content: Content, onTapBack: (() -> Void)? = nil) {
         self.title = title
         self.hideBackButton = hideBackButton
         self.rightButtons = rightButtons
         self.content = content
+        self.onTapBack = onTapBack
         Font.loadMyFonts
     }
     
     public var body: some View {
-        NavigationStack {
-            ZStack(content: {
-                VStack {
-                    ZStack(alignment: .center) {
-                        SDText(title, style: .size400(weight: .semiBold, theme: .primary, alignment: .center))
-                            .frame(alignment: .center)
-                        
-                        HStack(content: {
-                            if !hideBackButton {
-                                backButton
-                            }
-                            Spacer()
-                            righButtonView
-                                .padding(.trailing, Spacing.spacing3x)
-                        })
-                    }
-                    .frame(height: 44)
-                    contentView
+        ZStack(content: {
+            VStack {
+                ZStack(alignment: .center) {
+                    SDText(title, style: .size400(weight: .semiBold, theme: .primary, alignment: .center))
+                        .frame(alignment: .center)
+                    
+                    HStack(content: {
+                        if !hideBackButton {
+                            backButton
+                        }
+                        Spacer()
+                        righButtonView
+                            .padding(.trailing, Spacing.spacing3x)
+                    })
                 }
-                .navigationBarHidden(true)
-            })
-            .background(Color.appBackground)
-        }
+                .frame(height: Sizing.sizing10x + Sizing.sizing1x)
+                contentView
+            }
+            .navigationBarHidden(true)
+        })
+        .background(Color.appBackground)
     }
     
     private var contentView: some View {
@@ -58,7 +58,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
     
     private var backButton: some View {
         SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_back.value, iconSize: .large)) {
-            
+            onTapBack?()
         }
         .padding(.leading, Spacing.spacing3x)
     }

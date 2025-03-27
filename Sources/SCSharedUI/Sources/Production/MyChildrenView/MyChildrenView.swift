@@ -3,14 +3,21 @@ import SCTokens
 import SCComponents
 
 public struct MyChildrenView: View {
-    public init() {}
+
+    private var onTap: (() -> Void)?
+    
+    public init(onTap: (() -> Void)? = nil) {
+        self.onTap = onTap
+    }
     
     public var body: some View {
         GeometryReader { geometry in
             VStack {
                 titleAndFindMoreView
                 ScrollView(.horizontal) {
-                    MyChildrenGridView(proxy: geometry)
+                    MyChildrenGridView(proxy: geometry) {
+                        onTap?()
+                    }
                 }
                 .scrollIndicators(.never)
             }
@@ -37,7 +44,7 @@ public struct MyChildrenView: View {
 
 private struct MyChildrenGridView: View {
     
-    let proxy: GeometryProxy
+    private let proxy: GeometryProxy
     @State private var contentSizeHeight = CGFloat.zero
     
     private let items = 1...3
@@ -45,11 +52,22 @@ private struct MyChildrenGridView: View {
         GridItem()
     ]
 
+    private var onTap: (() -> Void)?
+    
+    init(proxy: GeometryProxy, onTap: (() -> Void)? = nil) {
+        self.proxy = proxy
+        self.onTap = onTap
+    }
+    
     var body: some View {
         LazyHGrid(rows: columns, spacing: Spacing.spacing4x) {
             Spacer(minLength: Spacing.spacing1x)
             ForEach(items, id: \.self) { item in
-                StudentBasicProfileCardView()
+                StudentBasicProfileCardView(onTapConnect: {
+                    
+                }, onTap: {
+                    self.onTap?()
+                })
                     .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Sizing.rowHeight)
                     .overlay {
                         GeometryReader(content: { geometry in

@@ -4,8 +4,12 @@ import SCComponents
 
 public struct StudentBasicProfileCardView: View {
     
-    public init() {
-        
+    private var onTapConnect: (() -> Void)?
+    private var onTap: (() -> Void)?
+    
+    public init(onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
+        self.onTapConnect = onTapConnect
+        self.onTap = onTap
     }
     
     public var body: some View {
@@ -25,6 +29,9 @@ public struct StudentBasicProfileCardView: View {
         .background(Color.white)
         .clipShape(.rect(cornerRadius: Sizing.sizing4x))
         .shadow(SDElevation.defaultGrayElevation)
+        .onTapGesture {
+            onTap?()
+        }
     }
     
     private var profileImage: some View {
@@ -46,7 +53,7 @@ public struct StudentBasicProfileCardView: View {
             SDButton("Connect",
                      buttonType: .primaryButton(.size90(weight: .semiBold, theme: .standard, alignment: .leading)),
                      spacing: Sizing.sizing2x, maxSize: true) {
-                
+                onTapConnect?()
             }
                      .frame(height: Constants.connectButtonHeight)
         }
