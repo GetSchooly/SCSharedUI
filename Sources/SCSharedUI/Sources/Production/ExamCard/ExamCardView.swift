@@ -3,6 +3,21 @@ import SCComponents
 import SCTokens
 
 public struct ExamCardView: View {
+    
+    public init() {
+        setupUI()
+        initViewModel()
+    }
+    
+    private func setupUI() {
+        // setup for the UI
+    }
+    
+    private func initViewModel() {
+        // setup for the ViewModel
+        // viewModel.fetchData()
+    }
+    
     public var body: some View {
         HStack {
             subjectDateView
