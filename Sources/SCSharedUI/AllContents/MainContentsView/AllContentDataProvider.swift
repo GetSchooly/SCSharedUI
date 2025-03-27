@@ -23,6 +23,8 @@ enum AllContentViewType: String, CaseIterable, Identifiable {
     case studentBasicProfile
     case userProfile
     case askdoutCard
+    case questions
+    
 }
 
 extension AllContentViewType {
@@ -31,6 +33,7 @@ extension AllContentViewType {
         case .studentBasicProfile: StudentBasicProfileCardView.examples
         case .userProfile: UserProfileCardView.examples
         case .askdoutCard: AskDoubtCard.examples
+        case .questions: QuestionDetail.examples
         }
     }
     

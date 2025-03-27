@@ -122,7 +122,7 @@ struct QuestionDetail: View {
 extension QuestionDetail: HasExamples {
     static var examples: [Example] {
         [Example("QuestionDetail only Text", width: 300, height: 300) {
-            AskDoubtCard(cardType: .withImage)
+            AskDoubtCard(cardType: .onlyText)
         },
          Example("QuestionDetail with Image", width: 300, height: 300) {
              AskDoubtCard(cardType: .withImage)

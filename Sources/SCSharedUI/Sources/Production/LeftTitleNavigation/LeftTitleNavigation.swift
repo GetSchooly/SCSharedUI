@@ -14,7 +14,7 @@ public struct LeftTitleNavigationView: View {
     
     public var body: some View {
         HStack {
-            SDButton("Hello Ankit", buttonType: .noStyle(.size100(weight: .bold, theme: .primary, alignment: .leading)),
+            SDButton("Hello Parent", buttonType: .noStyle(.size100(weight: .bold, theme: .primary, alignment: .leading)),
                      icon: .local(resource: Icons.ic_schoolInfo.value, iconSize: .XXLarge, contentMode: .fill)) {
                 onSchoolInfoClick()
             }
