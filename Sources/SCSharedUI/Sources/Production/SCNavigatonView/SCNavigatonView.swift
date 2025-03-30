@@ -8,15 +8,16 @@ public struct SCNavigatonView<Content>: View where Content: View {
     private let hideBackButton: Bool
     private let rightButtons: [AnyView]
     private let content: Content
+    private let isContentShadow: Bool
     public var onTapBack: (() -> Void)?
     
-    public init(title: String, hideBackButton: Bool = false, rightButtons: [AnyView] = [], content: Content, onTapBack: (() -> Void)? = nil) {
+    public init(title: String, hideBackButton: Bool = false, rightButtons: [AnyView] = [], content: Content, isContentShadow: Bool = true, onTapBack: (() -> Void)? = nil) {
         self.title = title
         self.hideBackButton = hideBackButton
         self.rightButtons = rightButtons
         self.content = content
+        self.isContentShadow = isContentShadow
         self.onTapBack = onTapBack
-        Font.loadMyFonts
     }
     
     public var body: some View {
@@ -53,7 +54,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
             .rect(topLeadingRadius: CornerRadius.cornerRadiusBaseView, topTrailingRadius: CornerRadius.cornerRadiusBaseView, style: .continuous)
         )
         .ignoresSafeArea(edges: .bottom)
-        .shadow(.defaultGrayElevation)
+        .shadow(.defaultGrayElevation, show: isContentShadow)
     }
     
     private var backButton: some View {

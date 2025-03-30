@@ -20,7 +20,7 @@ enum AllContentViewType: String, CaseIterable, Identifiable {
         return self
     }
     
-    case studentBasicProfile
+    case studentProfile
     case userProfile
     case askdoutCard
     case questions
@@ -30,7 +30,7 @@ enum AllContentViewType: String, CaseIterable, Identifiable {
 extension AllContentViewType {
     var examples: [Example] {
         switch self {
-        case .studentBasicProfile: StudentBasicProfileCardView.examples
+        case .studentProfile: StudentProfileCardView.examples
         case .userProfile: UserProfileCardView.examples
         case .askdoutCard: AskDoubtCard.examples
         case .questions: QuestionDetail.examples
