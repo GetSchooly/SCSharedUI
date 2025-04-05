@@ -41,7 +41,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
             }
             .navigationBarHidden(true)
         })
-        .background(Color.appBackground)
+        .background(!isContentShadow ? Color.clear : Color.appBackground)
     }
     
     private var contentView: some View {
@@ -49,11 +49,11 @@ public struct SCNavigatonView<Content>: View where Content: View {
             content
         })
         .padding(.top, Spacing.spacing5x)
-        .background(Color.white)
         .clipShape(
             .rect(topLeadingRadius: CornerRadius.cornerRadiusBaseView, topTrailingRadius: CornerRadius.cornerRadiusBaseView, style: .continuous)
         )
         .ignoresSafeArea(edges: .bottom)
+        .background(isContentShadow ? Color.clear : Color.white)
         .shadow(.defaultGrayElevation, show: isContentShadow)
     }
     

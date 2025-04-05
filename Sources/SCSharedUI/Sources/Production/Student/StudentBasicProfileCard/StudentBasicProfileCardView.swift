@@ -9,12 +9,14 @@ public enum StudentProfile {
 
 public struct StudentProfileCardView: View {
     
-    private var profile: StudentProfile = .basic
-    private var onTapConnect: (() -> Void)?
-    private var onTap: (() -> Void)?
+    @Environment(\.mainWindowSize) var mainWindowSize
     
-    public init(profile: StudentProfile = .basic, onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
-        self.profile = profile
+    private let type: StudentProfile
+    private let onTapConnect: (() -> Void)?
+    private let onTap: (() -> Void)?
+    
+    public init(type: StudentProfile = .basic, onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
+        self.type = type
         self.onTapConnect = onTapConnect
         self.onTap = onTap
         Font.loadMyFonts
@@ -22,7 +24,7 @@ public struct StudentProfileCardView: View {
     
     public var body: some View {
         Group {
-            switch profile {
+            switch type {
             case .basic:
                 basicProfileView
             case .advanced:
@@ -43,8 +45,9 @@ public struct StudentProfileCardView: View {
             profileImage.padding(.bottom, Spacing.spacing2x)
             studentBasicInfo
         }
-        .padding(.horizontal, Spacing.spacing1x)
-        .padding(.vertical, Spacing.spacing3x)
+//        .padding(.horizontal, Spacing.spacing2x)
+//        .padding(.vertical, Spacing.spacing3x)
+        .frame(maxWidth: mainWindowSize.width * Constants.widthPercentage, maxHeight: Constants.viewHeight)
     }
     
     private var advancedProfileView: some View {
@@ -86,8 +89,9 @@ public struct StudentProfileCardView: View {
     }
     
     private var studentBasicInfo: some View {
-        VStack(alignment: profile == .advanced ? .leading : .center) {
+        VStack(alignment: type == .advanced ? .leading : .center) {
             SDText("Ram Kumar", style: .size100(weight: .bold, theme: .primary))
+                .padding(.bottom, type == .advanced ? Spacing.spacing0x : Spacing.spacing1x)
             SDText("XI-B | Roll no: 04", style: .size90(weight: .regular, theme: .secondry))
         }
     }
@@ -96,6 +100,8 @@ public struct StudentProfileCardView: View {
 private struct Constants {
     static let profileImageSize: CGFloat = 60.0
     static let connectButtonHeight: CGFloat = 32
+    static let widthPercentage: CGFloat = 0.32
+    static let viewHeight: CGFloat = 125
 }
 
 extension StudentProfileCardView: HasExamples {
@@ -104,18 +110,17 @@ extension StudentProfileCardView: HasExamples {
             StudentProfileCardView()
         },
          Example("AdvanceProfileCardView", width: 220, height: 180) {
-            StudentProfileCardView(profile: .advanced)
+            StudentProfileCardView(type: .advanced)
          }]
     }
 }
 
 #Preview {
     VStack {
-        StudentProfileCardView(profile: .advanced)
-            .frame(width: 200, height: 180)
+        StudentProfileCardView(type: .advanced)
             .padding(.bottom, 32)
         
         StudentProfileCardView()
-            .frame(width: 150)
     }
+    .environment(\.mainWindowSize, .init(width: 320, height: 580))
 }

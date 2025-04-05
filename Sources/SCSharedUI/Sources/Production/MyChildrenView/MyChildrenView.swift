@@ -63,7 +63,7 @@ private struct MyChildrenGridView: View {
         LazyHGrid(rows: columns, spacing: Spacing.spacing4x) {
             Spacer(minLength: Spacing.spacing1x)
             ForEach(items, id: \.self) { item in
-                StudentProfileCardView(onTapConnect: {
+                StudentProfileCardView(type: .advanced, onTapConnect: {
                     
                 }, onTap: {
                     self.onTap?()

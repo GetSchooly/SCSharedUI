@@ -2,10 +2,12 @@ import SwiftUI
 import SCTokens
 import SCComponents
 
-struct SchoolProfileView: View {
+public struct SchoolProfileView: View {
     
     // variables/properties
-    private var onTap: (() -> Void)?
+    private let onTap: (() -> Void)?
+    
+    @Environment(\.mainWindowSize) var mainWindowSize
     
     // your view model
     @StateObject var viewModel: SchoolProfileViewModel = SchoolProfileViewModel()
@@ -18,7 +20,7 @@ struct SchoolProfileView: View {
     }
     
     public var body: some View {
-        advancedProfileView
+        profileView
         .padding(Spacing.spacing4x)
         .background(Color.white)
         .clipShape(.rect(cornerRadius: Sizing.sizing4x))
@@ -28,18 +30,18 @@ struct SchoolProfileView: View {
         }
     }
     
-    private var advancedProfileView: some View {
+    private var profileView: some View {
         VStack(alignment: .center) {
             HStack(alignment: .top) {
-                VStack {
+                ZStack(alignment: .bottomTrailing, content: {
                     profileImage
                     infoImage
-                        .padding(.trailing, -Spacing.spacing8x)
-                        .padding(.top, -Spacing.spacing7x)
-                }
+                })
             }
             basicInfo
         }
+        .padding(Spacing.spacing2x)
+        .frame(maxWidth: mainWindowSize.width * Constants.widthPercentage, maxHeight: Constants.viewHeight)
     }
     
     private var profileImage: some View {
@@ -66,7 +68,7 @@ struct SchoolProfileView: View {
     
     private var basicInfo: some View {
         VStack(alignment: .center) {
-            SDText("Delhi Public School", style: .size200(weight: .bold, theme: .primary))
+            SDText("Delhi Public School Public School", style: .size100(weight: .semiBold, theme: .primary))
             HStack {
                 Color.royalBlue.frame(width: Sizing.sizing2x, height: Sizing.sizing2x)
                     .clipShape(.circle)
@@ -92,6 +94,8 @@ struct SchoolProfileView: View {
 
 private struct Constants {
     static let profileImageSize: CGFloat = 60.0
+    static let widthPercentage: CGFloat = 0.45
+    static let viewHeight: CGFloat = 125
 }
 
 extension SchoolProfileView: HasExamples {
@@ -104,5 +108,6 @@ extension SchoolProfileView: HasExamples {
 
 #Preview {
     SchoolProfileView()
+        .environment(\.mainWindowSize, .init(width: 300, height: 400))
         .frame(width: 200, height: 200)
 }
