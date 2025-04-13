@@ -41,7 +41,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
             }
             .navigationBarHidden(true)
         })
-        .background(!isContentShadow ? Color.clear : Color.appBackground)
+        .background(isContentShadow ? Color.appBackground : Color.clear)
     }
     
     private var contentView: some View {
@@ -49,11 +49,11 @@ public struct SCNavigatonView<Content>: View where Content: View {
             content
         })
         .padding(.top, Spacing.spacing5x)
+        .background(isContentShadow ? Color.white : Color.clear)
         .clipShape(
             .rect(topLeadingRadius: CornerRadius.cornerRadiusBaseView, topTrailingRadius: CornerRadius.cornerRadiusBaseView, style: .continuous)
         )
         .ignoresSafeArea(edges: .bottom)
-        .background(isContentShadow ? Color.clear : Color.white)
         .shadow(.defaultGrayElevation, show: isContentShadow)
     }
     
@@ -84,7 +84,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
 }
 
 private extension CornerRadius {
-    static let cornerRadiusBaseView: CGFloat = 20
+    static let cornerRadiusBaseView: CGFloat = Sizing.sizing5x
 }
 
 #Preview {
@@ -99,5 +99,12 @@ private extension CornerRadius {
 //            
 //        })
     ],
-                    content: EmptyView())
+                    content:
+                        ScrollView(content: {
+        VStack {
+            Text("Hello WOrld")
+                .frame(width: 400)
+        }
+    })
+    )
 }

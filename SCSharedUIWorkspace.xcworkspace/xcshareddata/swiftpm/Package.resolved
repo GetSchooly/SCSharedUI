@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCComponents",
       "state" : {
-        "revision" : "3c48b2fa8afcf6a0b253c47c6b8bba87e2b2a1a3",
-        "version" : "1.0.8"
+        "revision" : "61b48250fd937d4f7e98cceacc7e815d582f8363",
+        "version" : "1.0.11"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCTokens",
       "state" : {
-        "revision" : "1c72e340b44504140dfd6e783ca14879e1b81baf",
-        "version" : "1.0.9"
+        "revision" : "f2a397523513f51298399a7c623c6110ff5ebfbc",
+        "version" : "1.0.15"
       }
     }
   ],
