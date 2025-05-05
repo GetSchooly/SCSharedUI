@@ -5,7 +5,7 @@ import SCTokens
 public struct AttendanceCalanderView: View {
     
     // variables/properties
-    
+    @State private var toShowMonthPicker: Bool = false
     // your view model
     @StateObject var viewModel: AttendanceCalanderViewModel = AttendanceCalanderViewModel()
     
@@ -25,6 +25,9 @@ public struct AttendanceCalanderView: View {
             wholeMonthView
             footerStatusView
         }
+        .sheet(isPresented: $toShowMonthPicker) {
+            monthPickerView
+        }
     }
     
     private func setupUI() {
@@ -39,9 +42,14 @@ public struct AttendanceCalanderView: View {
     private var wholeMonthView: some View {
         ScrollView(.vertical) {
             VStack(spacing: Spacing.spacing0x) {
-                ForEach(0..<30, id: \.self) { item in
-                    let itemViewModel = AttendanceCalCardViewModel(item: AttendanceCalCardItem(title1: "Monday", title2: "02.09.2024", icon: .ic_plus))
+                ForEach(viewModel.calendarData, id: \.date) { attendanceData in
+                    let itemViewModel = AttendanceCalCardViewModel(item: AttendanceCalCardItem(
+                        title1: attendanceData.day,
+                        title2: attendanceData.date,
+                        icon: attendanceData.status == .none ? nil : .ic_plus)
+                    )
                     AttendanceCalCardView(viewModel: itemViewModel)
+                        .opacity(attendanceData.status == .none ? 0.0 : 1)
                 }
             }
         }
@@ -49,16 +57,31 @@ public struct AttendanceCalanderView: View {
     
     private var topHeaderLeftView: some View {
         VStack(alignment: .leading, spacing: Spacing.spacing0x) {
-            SDText("2023/2024", style: .size200(weight: .medium, theme: .secondry, alignment: .leading))
-            
+            SDText(
+                viewModel.currentAssessmentYear,
+                style: .size200(weight: .medium, theme: .secondry, alignment: .leading)
+            )
             HStack {
-                SDButton("September", buttonType: .noStyle(.size200(weight: .semiBold, theme: .primary, alignment: .center)), spacing: Spacing.spacing2x, icon: .local(resource: Icons.ic_Fees.value, iconSize: .medium, placement: .right)) {
-                    
-                }
-                .padding(.leading, -Spacing.spacing2x)
+                SDButton(
+                    viewModel.selectedMonth?.title ?? "",
+                    buttonType: .noStyle(.size200(weight: .semiBold, theme: .primary, alignment: .center)),
+                    spacing: Spacing.spacing2x,
+                    icon: .local(resource: Icons.ic_Fees.value, iconSize: .medium, placement: .right)) {
+                        toShowMonthPicker = true
+                    }
+                    .padding(.leading, -Spacing.spacing2x)
                 Spacer()
             }
         }
+    }
+    
+    @ViewBuilder
+    private var monthPickerView: some View {
+        let pickerViewModel = SDPickerViewModel(items: viewModel.months) { selected in
+            print(selected)
+            self.viewModel.selectedMonth = selected
+        }
+        SDPickerView(viewModel: pickerViewModel).pickerStyle(.wheel)
     }
     
     private var topHeaderRightView: some View {

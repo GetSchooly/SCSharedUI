@@ -14,5 +14,5 @@ struct AttendanceCalCardHeader: Codable {
 struct AttendanceCalCardItem: Codable {
     let title1: String
     let title2: String
-    let icon: Icons
+    let icon: Icons?
 }

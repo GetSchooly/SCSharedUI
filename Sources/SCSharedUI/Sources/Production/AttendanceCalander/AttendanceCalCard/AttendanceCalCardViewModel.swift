@@ -2,7 +2,7 @@ import Foundation
 import SCComponents
 import SwiftUI
 
-enum AttendanceStatus: String, CaseIterable, Identifiable {
+enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
     var id: Self {
         return self
     }
@@ -80,7 +80,7 @@ class AttendanceCalCardViewModel: ObservableObject {
         if let header = header {
             SDText(header.title3, style: .size100(weight: .semiBold, theme: .standard, alignment: .center))
         } else if let item = item {
-            SDImage(.local(resource: item.icon.value, iconSize: .small, contentMode: .fit))
+            SDImage(.local(resource: item.icon?.value ?? "", iconSize: .small, contentMode: .fit))
         }
         EmptyView()
     }

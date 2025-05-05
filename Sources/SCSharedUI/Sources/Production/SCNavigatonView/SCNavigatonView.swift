@@ -11,13 +11,18 @@ public struct SCNavigatonView<Content>: View where Content: View {
     private let isContentShadow: Bool
     public var onTapBack: (() -> Void)?
     
-    public init(title: String, hideBackButton: Bool = false, rightButtons: [AnyView] = [], content: Content, isContentShadow: Bool = true, onTapBack: (() -> Void)? = nil) {
+    public init(title: String,
+                hideBackButton: Bool = false,
+                rightButtons: [AnyView] = [],
+                isContentShadow: Bool = true,
+                onTapBack: (() -> Void)? = nil,
+                @ViewBuilder content: () -> Content) {
         self.title = title
         self.hideBackButton = hideBackButton
         self.rightButtons = rightButtons
-        self.content = content
         self.isContentShadow = isContentShadow
         self.onTapBack = onTapBack
+        self.content = content()
     }
     
     public var body: some View {
@@ -88,23 +93,19 @@ private extension CornerRadius {
 }
 
 #Preview {
-    SCNavigatonView(title: "Test Title", rightButtons: [
-        AnyView(SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_plus.value, iconSize: .extraLarge)) {
-            
-        }),
-//        AnyView(SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_Fees.value, iconSize: .extraLarge)) {
-//            
-//        }),
-//        AnyView(SDButton("Edit", buttonType: .noStyle()) {
-//            
-//        })
-    ],
-                    content:
+    SCNavigatonView(title: "Test Title",
+                    rightButtons: [
+                        AnyView(SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_plus.value, iconSize: .extraLarge)) { }),
+                        //        AnyView(SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_Fees.value, iconSize: .extraLarge)) {
+                        //        }),
+                        //        AnyView(SDButton("Edit", buttonType: .noStyle()) {
+                        //        })
+                    ]) {
                         ScrollView(content: {
-        VStack {
-            Text("Hello WOrld")
-                .frame(width: 400)
-        }
-    })
-    )
+                            VStack {
+                                Text("Hello WOrld")
+                                    .frame(width: 400)
+                            }
+                        })
+                    }
 }
