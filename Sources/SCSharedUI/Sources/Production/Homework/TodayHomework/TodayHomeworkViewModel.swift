@@ -1,11 +1,10 @@
 import Foundation
 
-class TodayHomeworkViewModel: ObservableObject {
+public class TodayHomeworkViewModel: ObservableObject {
     
     // MARK:- Initialize
-    init() {
+    public init() {
         // Do something
-        
     }
     
     // MARK: - Fetching functions

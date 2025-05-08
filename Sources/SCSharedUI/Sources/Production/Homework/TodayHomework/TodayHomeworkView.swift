@@ -15,7 +15,7 @@ public struct TodayHomeworkView: View {
     public var body: some View {
         VStack {
             titleAndFindMoreView
-            HomeworkCard()
+            HomeworkCard(viewModel: UpcomingCardViewModel(isShadow: true))
         }
     }
     

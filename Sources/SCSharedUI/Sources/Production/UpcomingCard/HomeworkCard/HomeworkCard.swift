@@ -7,12 +7,10 @@ public struct HomeworkCard: View {
     // variables/properties
     
     // your view model
-    @ObservedObject var viewModel: UpcomingCardViewModel = UpcomingCardViewModel()
+    private let viewModel: UpcomingCardViewModel
     
-    public init() {
-        Font.loadMyFonts
-        setupUI()
-        initViewModel()
+    public init(viewModel: UpcomingCardViewModel) {
+        self.viewModel = viewModel
     }
     
     public var body: some View {
@@ -33,15 +31,6 @@ public struct HomeworkCard: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
         .shadow(SDElevation.defaultGrayElevation)
-    }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
     }
     
     private var dueSubView: some View {
@@ -81,7 +70,7 @@ extension HomeworkCard: HasExamples {
 
 #Preview {
     VStack(content: {
-        HomeworkCard()
+        HomeworkCard(viewModel: UpcomingCardViewModel(isShadow: true))
     })
     .padding()
 }

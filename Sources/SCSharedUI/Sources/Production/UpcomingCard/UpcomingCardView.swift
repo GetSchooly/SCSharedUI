@@ -7,7 +7,7 @@ public struct UpcomingCardView: View {
     // variables/properties
     
     // your view model
-    @ObservedObject var viewModel: UpcomingCardViewModel = UpcomingCardViewModel()
+    @ObservedObject var viewModel: UpcomingCardViewModel = UpcomingCardViewModel(isShadow: true)
     
     public init() {
         setupUI()

@@ -5,7 +5,8 @@ import SwiftUICore
 public class AttendanceCalanderViewModel: ObservableObject {
     
     var currentAssessmentYear: String {
-        return "2024/2025"
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return "\(currentYear)/\(currentYear + 1)"
     }
     @Published var selectedMonth: SDPickerModel?
     private(set) var months: [SDPickerModel] = []
