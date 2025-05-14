@@ -15,17 +15,17 @@ class StudentOptionsViewModel: ObservableObject {
     func fetchData() {
         // Do something
         studentOptions = [
-            StudentOptionsModel(id: 0, title: "Teachers", icon: Icons.ic_Teachers.value, isSelected: false),
-            StudentOptionsModel(id: 1, title: "Attendance", icon: Icons.ic_Attendance.value, isSelected: false),
-            StudentOptionsModel(id: 2, title: "Time Table", icon: Icons.ic_timeTable.value, isSelected: false),
+            StudentOptionsModel(id: .teachers, title: "Teachers", icon: Icons.ic_Teachers.value, isSelected: false),
+            StudentOptionsModel(id: .attendance, title: "Attendance", icon: Icons.ic_Attendance.value, isSelected: false),
+            StudentOptionsModel(id: .timeTable, title: "Time Table", icon: Icons.ic_timeTable.value, isSelected: false),
             
-            StudentOptionsModel(id: 3, title: "Syllabus", icon: Icons.ic_Syllabus.value, isSelected: false),
-            StudentOptionsModel(id: 4, title: "Homework", icon: Icons.ic_Homework.value, isSelected: false),
-            StudentOptionsModel(id: 5, title: "Exams", icon: Icons.ic_Exams.value, isSelected: false),
+            StudentOptionsModel(id: .syllabus, title: "Syllabus", icon: Icons.ic_Syllabus.value, isSelected: false),
+            StudentOptionsModel(id: .homework, title: "Homework", icon: Icons.ic_Homework.value, isSelected: false),
+            StudentOptionsModel(id: .exams, title: "Exams", icon: Icons.ic_Exams.value, isSelected: false),
         
-            StudentOptionsModel(id: 6, title: "Results", icon: Icons.ic_result.value, isSelected: false),
-            StudentOptionsModel(id: 7, title: "Fees", icon: Icons.ic_Fees.value, isSelected: false),
-            StudentOptionsModel(id: 8, title: "Events", icon: Icons.ic_Events.value, isSelected: false),
+            StudentOptionsModel(id: .results, title: "Results", icon: Icons.ic_result.value, isSelected: false),
+            StudentOptionsModel(id: .fees, title: "Fees", icon: Icons.ic_Fees.value, isSelected: false),
+            StudentOptionsModel(id: .events, title: "Events", icon: Icons.ic_Events.value, isSelected: false),
         ]
     }
 }
