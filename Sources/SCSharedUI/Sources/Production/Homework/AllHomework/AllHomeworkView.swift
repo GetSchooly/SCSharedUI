@@ -8,7 +8,6 @@ public struct AllHomeworkView: View {
     @ObservedObject var viewModel: AllHomeworkViewModel
     
     public init(viewModel: AllHomeworkViewModel) {
-        Font.loadMyFonts
         self.viewModel = viewModel
     }
     
