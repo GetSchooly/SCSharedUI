@@ -23,9 +23,7 @@ public struct ExamsView: View {
     }
     
     public var body: some View {
-        SCNavigatonView(title: "Exams", hideBackButton: false) {
-            examListDetailView
-        }
+        examListDetailView
     }
     
     private var examListDetailView: some View {
