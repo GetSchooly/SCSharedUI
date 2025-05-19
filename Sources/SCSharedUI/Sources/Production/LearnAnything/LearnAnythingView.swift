@@ -5,11 +5,13 @@ import SCComponents
 public struct LearnAnythingView: View {
     
     // variables/properties
+    private var onTap: (() -> Void)?
     
     // your view model
     @ObservedObject var viewModel: LearnAnythingViewModel = LearnAnythingViewModel()
     
-    public init(viewModel: LearnAnythingViewModel) {
+    public init(viewModel: LearnAnythingViewModel, onTap: (() -> Void)? = nil) {
+        self.onTap = onTap
         setupUI()
         initViewModel()
     }
@@ -47,7 +49,7 @@ public struct LearnAnythingView: View {
                     .padding(.bottom, Spacing.spacing4x)
                 
                 SDButton("Start with AI Tutor", buttonType: .primaryButton(.size200(weight: .semiBold, theme: .standard, alignment: .center)), maxSize: true, onTapAction: {
-                    
+                    onTap?()
                 })
                 .frame(height: Sizing.sizing12x)
             }
