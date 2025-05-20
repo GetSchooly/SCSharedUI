@@ -40,10 +40,9 @@ public struct InboxCard: View {
             Spacer()
             VStack {
                 SDText(viewModel.inboxCardModel.timeAgo, style: .size75(weight: .regular, theme: .secondry, alignment: .leading))
-               // SDImage(.local(resource: Icons.ic_check.value, iconSize: .large))
                 Image(systemName: "1.circle").renderingMode(.template).foregroundStyle(Color.white)
                     .background(Color.royalBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing3x))
                     .padding(.top, Spacing.spacing0xHalf)
             }
         }
