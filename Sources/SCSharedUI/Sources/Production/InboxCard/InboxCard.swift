@@ -5,9 +5,10 @@ import SCTokens
 public struct InboxCard: View {
     
     // your view model
-    @ObservedObject var viewModel: TodayHomeworkViewModel = TodayHomeworkViewModel()
+    @ObservedObject var viewModel: InboxCardViewModel
     
-    public init() {
+    public init(viewModel: InboxCardViewModel) {
+        self.viewModel = viewModel
         setupUI()
         initViewModel()
     }
@@ -18,7 +19,8 @@ public struct InboxCard: View {
     
     private var inboxCardView: some View {
         HStack(alignment: .center) {
-            SDImage(.remote(url: "https://picsum.photos/id/103/200/200", contentMode: .fit))
+            SDImage(.remote(url: viewModel.inboxCardModel.userProfileImageUrl
+                            , contentMode: .fit))
                 .frame(width: Sizing.sizing12x, height: Sizing.sizing12x)
                 .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing6x))
                 .padding(.top, Spacing.spacing1x)
@@ -31,17 +33,16 @@ public struct InboxCard: View {
     private func messageContentView() -> some View {
         HStack {
             VStack(alignment: .leading) {
-                SDText("Maya Desai", style: .size100(weight: .semiBold, theme: .primary, alignment: .leading))
+                SDText(viewModel.inboxCardModel.name, style: .size100(weight: .semiBold, theme: .primary, alignment: .leading))
                     .padding(.bottom, Spacing.spacing0xQuarter)
-                SDText("Thank you very much teacher!", style: .size90(weight: .regular, theme: .secondry, alignment: .leading))
+                SDText(viewModel.inboxCardModel.text, style: .size90(weight: .regular, theme: .secondry, alignment: .leading))
             }
             Spacer()
             VStack {
-                SDText("09:23 am", style: .size75(weight: .regular, theme: .secondry, alignment: .leading))
-               // SDImage(.local(resource: Icons.ic_check.value, iconSize: .large))
-                Image(systemName: "5.circle").renderingMode(.template).foregroundStyle(Color.white)
+                SDText(viewModel.inboxCardModel.timeAgo, style: .size75(weight: .regular, theme: .secondry, alignment: .leading))
+                Image(systemName: "1.circle").renderingMode(.template).foregroundStyle(Color.white)
                     .background(Color.royalBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing3x))
                     .padding(.top, Spacing.spacing0xHalf)
             }
         }
@@ -63,11 +64,23 @@ public struct InboxCard: View {
 extension InboxCard: HasExamples {
     static var examples: [Example] {
         [Example("InboxCard", width: 300, height: 300) {
-            InboxCard()
+            let viewModel = InboxCardViewModel(inboxCardModel: InboxCardModel(
+                text: "Your message here",
+                name: "Title here",
+                profileImageUrl: "https://picsum.photos/id/103/200/200",
+                username: "Title here",
+                timeAgo: "20 secs ago"))
+            InboxCard(viewModel: viewModel)
         }]
     }
 }
 
 #Preview {
-    InboxCard().padding()
+    let viewModel = InboxCardViewModel(inboxCardModel: InboxCardModel(
+        text: "Your message here",
+        name: "Title here",
+        profileImageUrl: "https://picsum.photos/id/103/200/200",
+        username: "Title here",
+        timeAgo: "20 secs ago"))
+    InboxCard(viewModel: viewModel).padding()
 }
