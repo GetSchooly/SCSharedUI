@@ -6,8 +6,10 @@ public struct TodayHomeworkView: View {
     
     // your view model
     @ObservedObject var viewModel: TodayHomeworkViewModel = TodayHomeworkViewModel()
+    private var onTapCard: (() -> Void)?
     
-    public init() {
+    public init(onTapCard: (() -> Void)? = nil) {
+        self.onTapCard = onTapCard
         setupUI()
         initViewModel()
     }
@@ -16,6 +18,9 @@ public struct TodayHomeworkView: View {
         VStack {
             titleAndFindMoreView
             HomeworkCard(viewModel: UpcomingCardViewModel(isShadow: true))
+        }
+        .onTapGesture {
+            onTapCard?()
         }
     }
     
@@ -26,7 +31,7 @@ public struct TodayHomeworkView: View {
             Spacer()
             SDButton("View all",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing))) {
-                
+                onTapCard?()
             }
         }
         .frame(height: Spacing.spacing5x)
