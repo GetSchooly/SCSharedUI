@@ -7,7 +7,7 @@ import SCComponents
 public struct ParentNameCard: View {
     
     public init(){
-        
+        Font.loadMyFonts
     }
     
     
@@ -24,10 +24,10 @@ public struct ParentNameCard: View {
                     .padding(.bottom, Spacing.spacing5x)
                     .padding(.leading , 10)
             VStack(alignment: .leading) {
-                SDText("Akash Nairhfjkdhgjhfkjdsjghkfd", style: .size400(weight: .bold, theme: .darkGray, alignment: .leading))
+                SDText("Akash Nairhfjkdhgjhfkjdsjghkfd", style: .size300(weight: .bold, theme: .primary, alignment: .leading))
                     .lineLimit(1)
                     .padding(.trailing , Spacing.spacing2xHalf)
-                SDText("Guardian of Agilena and 2 others kndfkjhgklhlfkds ", style: .size100(weight: .medium, theme: .primary, alignment: .leading))
+                SDText("Guardian of Agilena and 2 others kndfkjhgklhlfkds ", style: .size90(weight: .regular, theme: .bright, alignment: .leading))
                     .padding(.trailing, Spacing.spacing2xHalf)
                     .lineLimit(2)
             }

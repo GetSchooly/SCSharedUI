@@ -7,7 +7,7 @@ import SCComponents
 public struct ProfileSettingsButtons: View {
     @State var tabName:String
     @State var tabImage: Icons
-    public let  onTap: () -> Void // closure property
+   
     public init(tabNameString: String, tabImageString: Icons) {
         self.tabName = tabNameString
         self.tabImage = tabImageString
