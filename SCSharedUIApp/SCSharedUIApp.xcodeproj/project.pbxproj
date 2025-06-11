@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,13 +13,49 @@
 		EF1859F12CBA2E7900D83C9D /* SCSharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = EF1859F02CBA2E7900D83C9D /* SCSharedUI */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		EFF7B1FA2DF947A100345BFF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		EF1859DE2CBA2E4C00D83C9D /* SCSharedUIApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCSharedUIApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF1859E12CBA2E4C00D83C9D /* SCSharedUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCSharedUIApp.swift; sourceTree = "<group>"; };
 		EF1859E52CBA2E4D00D83C9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF1859E82CBA2E4D00D83C9D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EF1859F92CBA330500D83C9D /* SCSharedUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SCSharedUI; path = ../..; sourceTree = "<group>"; };
+		EFF7B1FC2DF947A100345BFF /* libNetworkServices.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNetworkServices.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		EFF7B2442DF9491F00345BFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				NetworkServices/APIClient/APIClient.swift,
+				NetworkServices/APIClient/APIEndpoint.swift,
+				NetworkServices/APIClient/APIError.swift,
+				NetworkServices/APIClient/HTTPMethod.swift,
+				NetworkServices/APIClient/URLSessionAPIClient.swift,
+				NetworkServices/Endpoints/BaseURL.swift,
+				NetworkServices/Endpoints/ParentHomeEndpoint.swift,
+				NetworkServices/Endpoints/SignInEndPoint.swift,
+				NetworkServices/Example/ExampleUser.swift,
+				NetworkServices/ResponseModel.swift,
+			);
+			target = EF1859DD2CBA2E4C00D83C9D /* SCSharedUIApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		EFF7B1FD2DF947A100345BFF /* NetworkServices */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (EFF7B2442DF9491F00345BFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = NetworkServices; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		EF1859DB2CBA2E4C00D83C9D /* Frameworks */ = {
@@ -27,6 +63,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF1859F12CBA2E7900D83C9D /* SCSharedUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF7B1F92DF947A100345BFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +81,7 @@
 			children = (
 				EF1859E02CBA2E4C00D83C9D /* SCApp */,
 				EF1859F42CBA31D600D83C9D /* Packages */,
+				EFF7B1FD2DF947A100345BFF /* NetworkServices */,
 				EF1859DF2CBA2E4C00D83C9D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				EF1859DE2CBA2E4C00D83C9D /* SCSharedUIApp.app */,
+				EFF7B1FC2DF947A100345BFF /* libNetworkServices.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,6 +144,28 @@
 			productReference = EF1859DE2CBA2E4C00D83C9D /* SCSharedUIApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EFF7B1FB2DF947A100345BFF /* NetworkServices */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFF7B2002DF947A100345BFF /* Build configuration list for PBXNativeTarget "NetworkServices" */;
+			buildPhases = (
+				EFF7B1F82DF947A100345BFF /* Sources */,
+				EFF7B1F92DF947A100345BFF /* Frameworks */,
+				EFF7B1FA2DF947A100345BFF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				EFF7B1FD2DF947A100345BFF /* NetworkServices */,
+			);
+			name = NetworkServices;
+			packageProductDependencies = (
+			);
+			productName = NetworkServices;
+			productReference = EFF7B1FC2DF947A100345BFF /* libNetworkServices.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,11 +173,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					EF1859DD2CBA2E4C00D83C9D = {
 						CreatedOnToolsVersion = 15.0.1;
+					};
+					EFF7B1FB2DF947A100345BFF = {
+						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
@@ -130,6 +200,7 @@
 			projectRoot = "";
 			targets = (
 				EF1859DD2CBA2E4C00D83C9D /* SCSharedUIApp */,
+				EFF7B1FB2DF947A100345BFF /* NetworkServices */,
 			);
 		};
 /* End PBXProject section */
@@ -152,6 +223,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF1859E22CBA2E4C00D83C9D /* SCSharedUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF7B1F82DF947A100345BFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +413,34 @@
 			};
 			name = Release;
 		};
+		EFF7B2012DF947A100345BFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = BFV9T5WD3C;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EFF7B2022DF947A100345BFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = BFV9T5WD3C;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -352,6 +458,15 @@
 			buildConfigurations = (
 				EF1859ED2CBA2E4D00D83C9D /* Debug */,
 				EF1859EE2CBA2E4D00D83C9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFF7B2002DF947A100345BFF /* Build configuration list for PBXNativeTarget "NetworkServices" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFF7B2012DF947A100345BFF /* Debug */,
+				EFF7B2022DF947A100345BFF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

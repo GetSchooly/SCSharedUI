@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "7deda23bbdca612076c5c315003d8638a08ed0f1",
+        "version" : "8.3.2"
+      }
+    },
+    {
       "identity" : "sccomponents",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCComponents",
       "state" : {
-        "revision" : "61b48250fd937d4f7e98cceacc7e815d582f8363",
-        "version" : "1.0.11"
+        "revision" : "494251c006077c26c12d33cda345eebcdce3398b",
+        "version" : "1.0.13"
       }
     },
     {
@@ -14,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCTokens",
       "state" : {
-        "revision" : "f2a397523513f51298399a7c623c6110ff5ebfbc",
-        "version" : "1.0.15"
+        "revision" : "5b71220e2148e13cdab360919582b0dc8627a44d",
+        "version" : "1.16.3"
       }
     }
   ],
