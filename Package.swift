@@ -16,7 +16,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/GetSchooly/SCTokens", .upToNextMajor(from: Version("1.0.9"))),
-        .package(url: "https://github.com/GetSchooly/SCComponents", .upToNextMajor(from: Version("1.0.8")))
+        .package(url: "https://github.com/GetSchooly/SCComponents", .upToNextMajor(from: Version("1.0.8"))),
+        .package(url: "https://github.com/ninjaprox/LoaderUI", from: "0.2.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -24,7 +25,10 @@ let package = Package(
         .target(
             name: "SCSharedUI",
             dependencies: ["SCComponents",
-                           "SCTokens"],
+                           "SCTokens",
+                           "LoaderUI"
+                          ],
+            path: "Sources",
             resources: [
                 
             ]),
