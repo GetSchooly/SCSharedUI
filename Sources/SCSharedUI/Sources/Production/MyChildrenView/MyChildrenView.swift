@@ -10,7 +10,40 @@ public struct MyChildrenView: View {
         self.onTap = onTap
     }
     
+    @State private var loadingState: ViewLoadingState = .idle
+    @StateObject private var viewModel = MyChildrenViewModel()
+    
     public var body: some View {
+//        ZStack {
+//            mainContentView
+            loadingView
+//        }
+        .onReceive(viewModel.$loadingState) { loadingState in
+            self.loadingState = loadingState.viewLoadingState
+        }
+        .task {
+            viewModel.fetchAllregisteredStudents()
+        }
+    }
+    
+    @ViewBuilder
+    private var loadingView: some View {
+        switch loadingState {
+        case .idle, .loading:
+            mainContentView
+                .shimmer(isLoading: true)
+            
+        case .loaded:
+            mainContentView
+            
+        case .failed(let error):
+            LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
+                // viewModel.loadingState = .idle
+            }
+        }
+    }
+    
+    private var mainContentView: some View {
         GeometryReader { geometry in
             VStack {
                 titleAndFindMoreView

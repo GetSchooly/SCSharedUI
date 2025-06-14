@@ -1,4 +1,5 @@
 import Foundation
+import SCComponents
 
 public enum ParentHomeEndpoint: APIEndpoint {
 
@@ -31,7 +32,9 @@ extension ParentHomeEndpoint: APIEndpointHelpers {
     public var headers: [String: String]? {
         var headers: [String: String] = [:]
         // swiftlint:disable:next line_length
-        headers["Bearer Token"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMDgwMjg0LCJpYXQiOjE3NDk0ODgyODQsImp0aSI6IjNjZjZlZjc4YTJkZTRiZjhhOTcyYzhmYjVmODBjM2FjIiwidXNlcl9pZCI6MTY2fQ.eo0EbBq-R5v-Utp4x8dSnuP8_lFzlNuRUNP7vwIjHPE"
+        if let bearerToken = bearerToken {
+            headers["Authorization"] = "Bearer Token \(bearerToken)"
+        }
 
         switch self {
         case .getAllMarkStudent, .getAllRegisteredStudent:
@@ -43,5 +46,11 @@ extension ParentHomeEndpoint: APIEndpointHelpers {
 
     public var parameters: [String: Any?]? {
         return nil
+    }
+
+    private var bearerToken: String? {
+        let gurardianEmailId = UserDefaultsManager.shared.gurardianEmailId
+        let predicate = NSPredicate(format: "gurardianEmailId == %@", gurardianEmailId ?? "")
+        return DBManager.shared.fetch(GurardianModel.self, filter: predicate).first?.token
     }
 }

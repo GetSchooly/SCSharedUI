@@ -1,22 +1,25 @@
 import Foundation
 import Combine
 
+public struct EmptyDataModel: Encodable {}
+
 public class URLSessionAPIClient<EndpointType: APIEndpointFinal>: APIClient {
 
     public init() {}
 
-    public func request<T: Decodable, U: Encodable>(_ endpoint: EndpointType, body: U) -> AnyPublisher<T, Error> {
+    public func request<T: Decodable, U: Encodable>(_ endpoint: EndpointType, body: U? = Optional<EmptyDataModel>.none) -> AnyPublisher<T, Error> {
         let url = endpoint.baseURL.appendingPathComponent(endpoint.path)
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
 
         endpoint.headers?.forEach { request.addValue($0.value, forHTTPHeaderField: $0.key) }
-
-        do {
-            let jsonData = try JSONEncoder().encode(body)
-            request.httpBody = jsonData
-        } catch {
-            return Fail<T, Error>(error: APIError.other(reason: error)).eraseToAnyPublisher()
+        if let body = body {
+            do {
+                let jsonData = try JSONEncoder().encode(body)
+                request.httpBody = jsonData
+            } catch {
+                return Fail<T, Error>(error: APIError.other(reason: error)).eraseToAnyPublisher()
+            }
         }
 
         return URLSession.shared.dataTaskPublisher(for: request)
