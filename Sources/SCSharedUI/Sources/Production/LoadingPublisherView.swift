@@ -10,7 +10,24 @@ public enum LoadingState<T> {
     case loading
     case loaded(T)
     case failed(Error)
+    
+    public var viewLoadingState: ViewLoadingState {
+        switch self {
+        case .idle: return .idle
+        case .loading: return .loading
+        case .loaded: return .loaded
+        case .failed(let error): return .failed(error)
+        }
+    }
 }
+
+public extension LoadingState where T == Void {
+    static var loaded: LoadingState<Void> {
+        return .loaded(())
+    }
+}
+
+public typealias ViewLoadingState = LoadingState<Void>
 
 public struct LoadableView<T: Codable, Content: View>: View {
     @StateObject private var viewModel = LoadableViewModel<T>()
@@ -33,7 +50,7 @@ public struct LoadableView<T: Codable, Content: View>: View {
                 content(data)
                 
             case .failed(let error):
-                LoadingViewHelper.errorView(error: error) {
+                LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
                     viewModel.load(publisher: publisher())
                 }
             }
@@ -49,7 +66,7 @@ public struct LoadableView<T: Codable, Content: View>: View {
 public struct LoadingViewHelper {
     public static var defaultLoadingView: some View {
         ZStack {
-            Color.royalBlue.opacity(0.1)
+            Color.lightGray.opacity(0.6)
             BallClipRotateMultiple()
                 .foregroundStyle(Color.royalBlue)
                 .frame(width: Sizing.sizing14x, height: Sizing.sizing14x)
@@ -61,18 +78,22 @@ public struct LoadingViewHelper {
         .ignoresSafeArea()
     }
     
-    public static func errorView(error: Error, onRetry: @escaping () -> Void) -> some View {
-        VStack {
-            SDText(error.localizedDescription,
-                   style: .size200(weight: .regular, theme: .royalBlue, alignment: .center))
-            //Text("Failed: \(error.localizedDescription)")
+    public static func errorView(errorMessage: String, buttonText: String = "Retry", onRetry: @escaping () -> Void) -> some View {
+        ZStack {
+            Color.appwhite
+            VStack {
+                SDText(errorMessage,
+                       style: .size200(weight: .regular, theme: .primary, alignment: .center))
+                //Text("Failed: \(error.localizedDescription)")
                 .multilineTextAlignment(.center)
                 .padding()
-            
-            SDButton("Retry",
-                     buttonType: .royalBlueBordered(.size200(weight: .regular, theme: .standard, alignment: .center)),
-                     maxSize: true) {
-                onRetry()
+                
+                SDButton(buttonText,
+                         buttonType: .primaryButton(.size200(weight: .bold, theme: .standard, alignment: .center)),
+                         maxSize: true) {
+                    onRetry()
+                }
+                         .frame(width: 240, height: Sizing.sizing12x)
             }
         }
         .ignoresSafeArea()
@@ -80,7 +101,7 @@ public struct LoadingViewHelper {
 }
 
 open class LoadableViewModel<T: Codable>: ObservableObject {
-    @Published private(set) public var loadingState: LoadingState<T> = .idle
+    @Published public var loadingState: LoadingState<T> = .idle
     private var cancellable: AnyCancellable?
 
     public init() {}

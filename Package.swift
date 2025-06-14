@@ -17,7 +17,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/GetSchooly/SCTokens", .upToNextMajor(from: Version("1.0.9"))),
         .package(url: "https://github.com/GetSchooly/SCComponents", .upToNextMajor(from: Version("1.0.8"))),
-        .package(url: "https://github.com/ninjaprox/LoaderUI", from: "0.2.0")
+        .package(url: "https://github.com/ninjaprox/LoaderUI", from: "0.2.0"),
+        .package(url: "https://github.com/realm/realm-swift.git", from: "10.49.3")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -26,9 +27,9 @@ let package = Package(
             name: "SCSharedUI",
             dependencies: ["SCComponents",
                            "SCTokens",
-                           "LoaderUI"
+                           "LoaderUI",
+                           .product(name: "RealmSwift", package: "realm-swift"),
                           ],
-            path: "Sources",
             resources: [
                 
             ]),

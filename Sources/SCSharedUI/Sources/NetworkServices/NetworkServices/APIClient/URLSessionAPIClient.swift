@@ -23,15 +23,22 @@ public class URLSessionAPIClient<EndpointType: APIEndpointFinal>: APIClient {
             .subscribe(on: DispatchQueue.global(qos: .background))
             .tryMap { data, response -> Data in
 
-                if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
-                    print("Response JSON: \(json)")
+                guard let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) else {
+                    throw APIError.unknown
                 }
+                print("Response JSON: \(jsonObject)")
 
                 if let httpResponse = response as? HTTPURLResponse {
                     guard (200...299).contains(httpResponse.statusCode) else {
                         if let error = APIError.fromStatusCode(code: httpResponse.statusCode) {
                             throw error
                         } else {
+                            if let obj = jsonObject as? [String: AnyHashable],
+                               let meta = obj["meta"] as? [String: AnyHashable],
+                                let messgae = meta["successMessage"] as? String,
+                                !messgae.isEmpty {
+                                throw APIError.serverError(reason: messgae)
+                            }
                             throw APIError.unknown
                         }
                     }
