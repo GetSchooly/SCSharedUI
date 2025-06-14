@@ -8,7 +8,16 @@ public class DBManager {
         return try! Realm()
     }
     
-    private init() {}
+    private init() {
+        setupRealmMigration()
+    }
+    
+    // MARK: - Delete DB - for dev only
+    public func clearAll() {
+        try? realm.write {
+            realm.deleteAll()
+        }
+    }
     
     // MARK: - Save/Update
     public func save<T: Object>(_ object: T, isUpdate: Bool = true) {
@@ -59,6 +68,19 @@ public class DBManager {
         try? realm.write {
             realm.deleteAll()
         }
+    }
+    
+    private func setupRealmMigration() {
+        let config = Realm.Configuration(
+            schemaVersion: 1, // 🔁 Increment this every time schema changes
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 1 {
+                    // Automatic migration - no manual changes needed
+                }
+            }
+        )
+        
+        Realm.Configuration.defaultConfiguration = config
     }
 }
 
