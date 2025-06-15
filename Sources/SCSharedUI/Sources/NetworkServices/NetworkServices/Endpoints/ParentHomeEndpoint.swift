@@ -6,6 +6,7 @@ public enum ParentHomeEndpoint: APIEndpoint {
 
     case getAllRegisteredStudent
     case getAllMarkStudent
+    case linkStudentandParent
 
     public var baseURL: URL {
         BaseURL.url
@@ -17,6 +18,8 @@ public enum ParentHomeEndpoint: APIEndpoint {
             return "getAllRegisteredStudent"
         case .getAllMarkStudent:
             return "getAllMarkStudent"
+        case .linkStudentandParent:
+            return "linkStudentandParent"
         }
     }
 
@@ -24,6 +27,8 @@ public enum ParentHomeEndpoint: APIEndpoint {
         switch self {
         case .getAllMarkStudent, .getAllRegisteredStudent:
             return .get
+        case .linkStudentandParent:
+            return .post
         }
     }
 }
@@ -35,7 +40,7 @@ extension ParentHomeEndpoint: APIEndpointHelpers {
         headers["Content-Type"] = "application/json"
 
         switch self {
-        case .getAllMarkStudent, .getAllRegisteredStudent:
+        case .getAllMarkStudent, .getAllRegisteredStudent, .linkStudentandParent:
             if let bearerToken = bearerToken {
                 headers["Authorization"] = "Bearer \(bearerToken)"
             }

@@ -45,9 +45,9 @@ public struct MyChildrenView: View {
             VStack {
                 titleAndFindMoreView
                 ScrollView(.horizontal) {
-                    MyChildrenGridView(viewModel: viewModel, proxy: geometry) {
+                    MyChildrenGridView(viewModel: viewModel, proxy: geometry, onTap:  {
                         onTap?()
-                    }
+                    })
                 }
                 .scrollIndicators(.never)
             }
@@ -63,6 +63,7 @@ public struct MyChildrenView: View {
             SDButton("Find your children",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing)),
                      icon: .local(resource: Icons.ic_plus.value, iconSize: .small, contentMode: .fit)) {
+                onFindChildren()
             }
         }
         .padding(.horizontal, Spacing.spacing4x)
@@ -71,11 +72,11 @@ public struct MyChildrenView: View {
     }
 }
 
-private struct MyChildrenGridView: View {
+struct MyChildrenGridView: View {
 
-    @ObservedObject private var viewModel: MyChildrenViewModel
-
+    private var viewModel: MyChildrenViewModel
     private let proxy: GeometryProxy
+    private let profileType: StudentProfile
     @State private var contentSizeHeight = CGFloat.zero
 
     private let columns = [
@@ -83,11 +84,14 @@ private struct MyChildrenGridView: View {
     ]
 
     private var onTap: (() -> Void)?
+    private var onConnect: ((StudentData) -> Void)?
 
-    init(viewModel: MyChildrenViewModel, proxy: GeometryProxy, onTap: (() -> Void)? = nil) {
+    init(viewModel: MyChildrenViewModel, proxy: GeometryProxy, profileType: StudentProfile = .advanced, onConnect: ((StudentData) -> Void)? = nil, onTap: (() -> Void)? = nil) {
         self.viewModel = viewModel
         self.proxy = proxy
+        self.onConnect = onConnect
         self.onTap = onTap
+        self.profileType = profileType
     }
 
     var body: some View {
@@ -95,8 +99,8 @@ private struct MyChildrenGridView: View {
             Spacer(minLength: Spacing.spacing1x)
             ForEach(viewModel.markedChildren, id: \.self) { child in
                 let profileViewModel = StudentProfileCardViewModel(student: child)
-                StudentProfileCardView(viewModel: profileViewModel, type: .advanced, onTapConnect: {
-                    
+                StudentProfileCardView(viewModel: profileViewModel, type: profileType, onTapConnect: {
+                    self.onConnect?(child)
                 }, onTap: {
                     self.onTap?()
                 })

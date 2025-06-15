@@ -1,7 +1,9 @@
 import Foundation
 import Combine
 
-public struct EmptyDataModel: Encodable {}
+protocol CodableDataModel: Codable {}
+
+public struct EmptyDataModel: CodableDataModel {}
 
 public class URLSessionAPIClient<EndpointType: APIEndpointFinal>: APIClient {
 

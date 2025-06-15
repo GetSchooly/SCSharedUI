@@ -105,7 +105,7 @@ open class LoadableViewModel<T: Codable>: ObservableObject {
     private var cancellable: AnyCancellable?
 
     public init() {}
-    
+
     open func load(publisher: AnyPublisher<ResponseModel<T>, Error>) {
         loadingState = .loading
         cancellable = publisher
