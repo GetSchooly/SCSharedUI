@@ -1,5 +1,6 @@
 import Foundation
 import SCComponents
+import SCTokens
 
 public enum ParentHomeEndpoint: APIEndpoint {
 
@@ -31,14 +32,13 @@ extension ParentHomeEndpoint: APIEndpointHelpers {
 
     public var headers: [String: String]? {
         var headers: [String: String] = [:]
-        // swiftlint:disable:next line_length
-        if let bearerToken = bearerToken {
-            headers["Authorization"] = "Bearer Token \(bearerToken)"
-        }
+        headers["Content-Type"] = "application/json"
 
         switch self {
         case .getAllMarkStudent, .getAllRegisteredStudent:
-            headers["Content-Type"] = "application/json"
+            if let bearerToken = bearerToken {
+                headers["Authorization"] = "Bearer \(bearerToken)"
+            }
         }
 
         return headers
@@ -49,8 +49,12 @@ extension ParentHomeEndpoint: APIEndpointHelpers {
     }
 
     private var bearerToken: String? {
-        let gurardianEmailId = UserDefaultsManager.shared.gurardianEmailId
-        let predicate = NSPredicate(format: "gurardianEmailId == %@", gurardianEmailId ?? "")
-        return DBManager.shared.fetch(GurardianModel.self, filter: predicate).first?.token
+        let tokenResult = Keychain.shared.readString(forKey: .token)
+        switch tokenResult {
+        case .success(let token):
+            return token
+        case .failure(_):
+            return nil
+        }
     }
 }

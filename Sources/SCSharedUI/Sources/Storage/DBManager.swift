@@ -72,7 +72,7 @@ public class DBManager {
     
     private func setupRealmMigration() {
         let config = Realm.Configuration(
-            schemaVersion: 1, // 🔁 Increment this every time schema changes
+            schemaVersion: 2, // 🔁 Increment this every time schema changes
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     // Automatic migration - no manual changes needed

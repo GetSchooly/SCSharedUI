@@ -10,12 +10,14 @@ public enum StudentProfile {
 public struct StudentProfileCardView: View {
     
     @Environment(\.mainWindowSize) var mainWindowSize
+    @ObservedObject private var viewModel: StudentProfileCardViewModel
     
     private let type: StudentProfile
     private let onTapConnect: (() -> Void)?
     private let onTap: (() -> Void)?
     
-    public init(type: StudentProfile = .basic, onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
+    public init(viewModel: StudentProfileCardViewModel, type: StudentProfile = .basic, onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
+        self.viewModel = viewModel
         self.type = type
         self.onTapConnect = onTapConnect
         self.onTap = onTap
@@ -66,7 +68,7 @@ public struct StudentProfileCardView: View {
     }
     
     private var profileImage: some View {
-        SDImage(.remote(url: "https://picsum.photos/seed/picsum/200/300"))
+        SDImage(.remote(url: viewModel.profileImageURL))
             .frame(width: Constants.profileImageSize, height: Constants.profileImageSize, alignment: .center)
             .clipShape(.circle)
             .border(.init(
@@ -79,7 +81,7 @@ public struct StudentProfileCardView: View {
     private var studentAdvancedInfoView: some View {
         VStack(alignment: .leading) {
             studentBasicInfo
-            SDButton("Connect",
+            SDButton(viewModel.profileStatus,
                      buttonType: .primaryButton(.size90(weight: .semiBold, theme: .standard, alignment: .leading)),
                      spacing: Sizing.sizing2x, maxSize: true) {
                 onTapConnect?()
@@ -90,9 +92,9 @@ public struct StudentProfileCardView: View {
     
     private var studentBasicInfo: some View {
         VStack(alignment: type == .advanced ? .leading : .center) {
-            SDText("Ram Kumar", style: .size100(weight: .bold, theme: .primary))
+            SDText(viewModel.studentName, style: .size100(weight: .bold, theme: .primary))
                 .padding(.bottom, type == .advanced ? Spacing.spacing0x : Spacing.spacing1x)
-            SDText("XI-B | Roll no: 04", style: .size90(weight: .regular, theme: .secondry))
+            SDText(viewModel.classAndRollNumber, style: .size90(weight: .regular, theme: .secondry))
         }
     }
 }
@@ -107,20 +109,30 @@ private struct Constants {
 extension StudentProfileCardView: HasExamples {
     static var examples: [Example] {
         [Example("BasicProfileCardView", width: 220, height: 120) {
-            StudentProfileCardView()
+            StudentProfileCardView(
+                viewModel: StudentProfileCardViewModel(student: StudentData.mockStudent)
+            )
         },
          Example("AdvanceProfileCardView", width: 220, height: 180) {
-            StudentProfileCardView(type: .advanced)
+            StudentProfileCardView(
+                viewModel: StudentProfileCardViewModel(student: StudentData.mockStudent),
+                type: .advanced
+            )
          }]
     }
 }
 
 #Preview {
     VStack {
-        StudentProfileCardView(type: .advanced)
-            .padding(.bottom, 32)
+        StudentProfileCardView(
+            viewModel: StudentProfileCardViewModel(student: StudentData.mockStudent),
+            type: .advanced
+        )
+        .padding(.bottom, 32)
         
-        StudentProfileCardView()
+        StudentProfileCardView(
+            viewModel: StudentProfileCardViewModel(student: StudentData.mockStudent)
+        )
     }
     .environment(\.mainWindowSize, .init(width: 320, height: 580))
 }

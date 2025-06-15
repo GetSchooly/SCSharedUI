@@ -62,7 +62,7 @@ private struct LearnWithFunGridView: View {
 extension LearnWithFunView: HasExamples {
     static var examples: [Example] {
         [Example("LearnWithFunView", width: 390, height: 300) {
-            MyChildrenView()
+            MyChildrenView {}
         }]
     }
 }
