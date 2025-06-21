@@ -1,19 +1,15 @@
-
-
 import SwiftUI
 import SCTokens
 import SCComponents
 
 public struct ParentNameCard: View {
-    
-    public init(){
-        Font.loadMyFonts
-    }
-    
+
+    let parentProfileModel: ParentProfileModel
+
     public var body: some View {
         HStack {
             ZStack {
-                SDImage(.remote(url: "https://picsum.photos/id/103/200/200", contentMode: .fill))
+                SDImage(.remote(url: parentProfileModel.profileImage ?? "", contentMode: .fill))
                     .frame(width: Sizing.profileImageSize + Sizing.sizing1xHalf, height: Sizing.profileImageSize + Sizing.sizing1xHalf)
                     .clipShape(.circle)
                     .padding(Spacing.spacing1x)
@@ -23,10 +19,10 @@ public struct ParentNameCard: View {
             .padding(.leading, Spacing.spacing4x)
             
             VStack(alignment: .leading) {
-                SDText("Akash Nair", style: .size300(weight: .bold, theme: .primary, alignment: .leading))
+                SDText(parentProfileModel.profileName ?? "", style: .size300(weight: .bold, theme: .primary, alignment: .leading))
                     .lineLimit(1)
                     .padding(.trailing , Spacing.spacing2xHalf)
-                SDText("guardian of Agilena and 2 others", style: .size90(weight: .regular, theme: .secondry, alignment: .leading))
+                SDText(parentProfileModel.guradianDescription, style: .size90(weight: .regular, theme: .secondry, alignment: .leading))
                     .lineLimit(2)
             }
             .padding(.horizontal, Spacing.spacing2x)
@@ -44,5 +40,5 @@ private extension Sizing {
 }
 
 #Preview {
-    ParentNameCard()
+    ParentNameCard(parentProfileModel: ParentProfileModel.mockParent)
 }

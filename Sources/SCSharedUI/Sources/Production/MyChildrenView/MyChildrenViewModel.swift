@@ -36,9 +36,8 @@ class MyChildrenViewModel: LoadableViewModel<MyChildrenModel> {
         load(publisher: publisher)
     }
 
-    func fetchAllMarkedChildren() {
-        let publisher = mychildrenService.fetchAllMarkedChildren()
-        load(publisher: publisher)
+    func fetchAllMarkedChildren() -> AnyPublisher<ResponseModel<MyChildrenModel>, Error> {
+        return mychildrenService.fetchAllMarkedChildren()
     }
 }
 

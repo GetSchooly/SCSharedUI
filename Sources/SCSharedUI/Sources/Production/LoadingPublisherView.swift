@@ -30,35 +30,25 @@ public extension LoadingState where T == Void {
 public typealias ViewLoadingState = LoadingState<Void>
 
 public struct LoadableView<T: Codable, Content: View>: View {
-    @StateObject private var viewModel = LoadableViewModel<T>()
-    
-    private let publisher: () -> AnyPublisher<ResponseModel<T>, Error>
-    private let content: (T) -> Content
+    public let refreshTrigger: UUID
+    @ObservedObject public var viewModel: LoadableViewModel<T>
+    public let publisher: () -> AnyPublisher<ResponseModel<T>, Error>
+    @ViewBuilder public let content: () -> Content
 
-    public init(publisher: @escaping () -> AnyPublisher<ResponseModel<T>, Error>, content: @escaping (T) -> Content) {
-        self.publisher = publisher
-        self.content = content
-    }
-    
+    @State private var didLoad = false
+
     public var body: some View {
-        VStack {
-            switch viewModel.loadingState {
-            case .idle, .loading:
-                LoadingViewHelper.defaultLoadingView
-                
-            case .loaded(let data):
-                content(data)
-                
-            case .failed(let error):
-                LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
+        content()
+        .onAppear {
+            if !didLoad {
+                didLoad = true
+                if case .idle = viewModel.loadingState {
                     viewModel.load(publisher: publisher())
                 }
             }
         }
-        .onAppear {
-            if case .idle = viewModel.loadingState {
-                viewModel.load(publisher: publisher())
-            }
+        .onChange(of: refreshTrigger) { _ in
+            viewModel.load(publisher: publisher())
         }
     }
 }
@@ -103,11 +93,15 @@ public struct LoadingViewHelper {
 open class LoadableViewModel<T: Codable>: ObservableObject {
     @Published public var loadingState: LoadingState<T> = .idle
     private var cancellable: AnyCancellable?
+    private var lastPublisher: AnyPublisher<ResponseModel<T>, Error>?
 
     public init() {}
 
     open func load(publisher: AnyPublisher<ResponseModel<T>, Error>) {
+        cancellable?.cancel() // cancel all previous call
         loadingState = .loading
+        lastPublisher = publisher
+
         cancellable = publisher
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -127,5 +121,10 @@ open class LoadableViewModel<T: Codable>: ObservableObject {
         loadingState = .idle
         cancellable?.cancel()
         cancellable = nil
+    }
+    
+    open func retry() {
+        guard let publisher = lastPublisher else { return }
+        load(publisher: publisher)
     }
 }

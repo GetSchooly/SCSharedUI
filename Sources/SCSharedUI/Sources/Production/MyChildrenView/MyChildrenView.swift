@@ -5,6 +5,7 @@ import SCComponents
 public struct MyChildrenView: View {
 
     @StateObject private var viewModel = MyChildrenViewModel()
+    @State private var refreshID = UUID()
 
     private var onTap: (() -> Void)?
     private let onFindChildren: (() -> Void)
@@ -15,28 +16,29 @@ public struct MyChildrenView: View {
     }
 
     public var body: some View {
-        Group {
-            switch viewModel.loadingState.viewLoadingState {
-            case .idle, .loading:
-                mainContentView
-                    .shimmer(isLoading: true)
+        LoadableView(refreshTrigger: refreshID,
+                     viewModel: viewModel,
+                     publisher: { viewModel.fetchAllMarkedChildren() }) {
+            Group {
+                switch viewModel.loadingState.viewLoadingState {
+                case .idle, .loading:
+                    mainContentView
+                        .shimmer(isLoading: true)
 
-            case .loaded:
-                mainContentView
+                case .loaded:
+                    mainContentView
 
-            case .failed(let error):
-                LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
-                    // viewModel.loadingState = .idle
+                case .failed(let error):
+                    LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
+                        refreshID = UUID()
+                    }
                 }
             }
-        }
-        .onChange(of: viewModel.shoudlFindChildren) { shoudlFindChildren in
-            if shoudlFindChildren {
-                onFindChildren()
+            .onChange(of: viewModel.shoudlFindChildren) { shoudlFindChildren in
+                if shoudlFindChildren {
+                    onFindChildren()
+                }
             }
-        }
-        .task {
-            viewModel.fetchAllMarkedChildren()
         }
     }
 

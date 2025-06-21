@@ -31,7 +31,7 @@ public struct FindYourChildrenView: View {
             }
         }
         .task {
-            viewModel.fetchAllMarkedChildren()
+            viewModel.fetchAllregisteredStudents()
         }
     }
 

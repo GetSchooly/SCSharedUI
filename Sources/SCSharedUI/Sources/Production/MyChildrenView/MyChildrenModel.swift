@@ -53,7 +53,7 @@ class MyChildrenViewService: MyChildrenServiceProtocol {
     }
 }
 
-//MARK: - Mock
+// MARK: - Mock
 public extension StudentData {
     static let mockStudent: StudentData =  StudentData(
         id: 1,
