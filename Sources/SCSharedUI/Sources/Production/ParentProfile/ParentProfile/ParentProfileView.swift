@@ -26,10 +26,8 @@ public struct ParentProfileView: View {
                 case .loaded:
                     parentProfileView
 
-                case .failed(let error):
-                    LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
-                        refreshID = UUID()
-                    }
+                case .failed(_):
+                    EmptyView()
                 }
             }
         })

@@ -3,19 +3,36 @@ import SCTokens
 import SCComponents
 
 public struct ThoughtOfTheDayView: View {
-    
-    // variables/properties
-    
+
     // your view model
-    @ObservedObject var viewModel: ThoughtOfTheDayViewModel = ThoughtOfTheDayViewModel()
+    @StateObject var viewModel: ThoughtOfTheDayViewModel = ThoughtOfTheDayViewModel()
+    @State private var refreshID: UUID = UUID()
     
-    public init(viewModel: ThoughtOfTheDayViewModel) {
-        setupUI()
-        self.viewModel = viewModel
-        initViewModel()
-    }
+    public init() { }
     
     public var body: some View {
+        LoadableView(refreshTrigger: refreshID,
+                     viewModel: viewModel,
+                     publisher: { viewModel.fetchThoughtOfTheDay() })
+        {
+            Group {
+                switch viewModel.loadingState.viewLoadingState {
+                case .idle, .loading:
+                    mainContentView
+                        .shimmer(isLoading: true)
+                    
+                case .loaded:
+                    mainContentView
+                    
+                case .failed(let error):
+                    // refreshID = UUID()
+                    EmptyView()
+                }
+            }
+        }
+    }
+
+    private var mainContentView: some View {
         VStack(alignment: .leading, spacing: Spacing.spacing2x) {
             SDText("Thought of the day", style: .size100(weight: .semiBold, theme: .primary))
                 .frame(height: Sizing.sizing5x)
@@ -26,10 +43,10 @@ public struct ThoughtOfTheDayView: View {
     
     private var thoughtView: some View {
         VStack(alignment: .leading) {
-            SDText("Education is the most powerful weapon you can use to change the world.", style: .size100(weight: .medium, theme: .primary))
+            SDText(viewModel.thoughtOfTheDay.thought, style: .size100(weight: .medium, theme: .primary))
             
             VStack{
-                SDText("Nelson Mandela", style: .size100(weight: .medium, theme: .primary, alignment: .trailing))
+                SDText(viewModel.thoughtOfTheDay.writtenBy, style: .size100(weight: .medium, theme: .primary, alignment: .trailing))
                     .padding(.top, Spacing.spacing1x)
             }.frame(maxWidth: .infinity, alignment: .trailing)
         }
@@ -38,17 +55,8 @@ public struct ThoughtOfTheDayView: View {
         .background(Color.lightBlue)
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
 }
 
 #Preview {
-    ThoughtOfTheDayView(viewModel: ThoughtOfTheDayViewModel())
+    ThoughtOfTheDayView()
 }

@@ -7,7 +7,7 @@ class ParentProfileViewModel: LoadableViewModel<ParentProfileModel> {
     private lazy var parentProfileService: ParentProfileService = ParentProfileService()
     private var cancellables: Set<AnyCancellable> = []
 
-    var profileModel: ParentProfileModel?
+    private(set) var profileModel: ParentProfileModel?
 
     var tabSettingsItems: [ParentProfileOptionModel] = [
         ParentProfileOptionModel(title: "Subscription", image: Icons.ic_Subscribe),
@@ -41,7 +41,7 @@ class ParentProfileViewModel: LoadableViewModel<ParentProfileModel> {
             .store(in: &cancellables)
     }
 
-    func fetchParentProfile() -> AnyPublisher<ResponseModel<ParentProfileModel>, Error>  {
+    func fetchParentProfile() -> AnyPublisher<ResponseModel<ParentProfileModel>, Error> {
         parentProfileService.getParentProfile()
     }
 }
