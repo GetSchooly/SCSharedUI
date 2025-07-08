@@ -5,8 +5,35 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher",
       "state" : {
-        "revision" : "7deda23bbdca612076c5c315003d8638a08ed0f1",
-        "version" : "8.3.2"
+        "revision" : "ef40458c27ccc65aec62c0cc65da296e07264ffd",
+        "version" : "8.4.0"
+      }
+    },
+    {
+      "identity" : "loaderui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ninjaprox/LoaderUI",
+      "state" : {
+        "revision" : "1b8ad2dfb06080ffcc51a74da0aeba56a0f7b877",
+        "version" : "0.2.1"
+      }
+    },
+    {
+      "identity" : "realm-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/realm/realm-core.git",
+      "state" : {
+        "revision" : "cccb3ca9e26ec452a29f2f0d4050d1e38b8a3d43",
+        "version" : "14.14.0"
+      }
+    },
+    {
+      "identity" : "realm-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/realm/realm-swift.git",
+      "state" : {
+        "revision" : "54eebd2b5e7a4a8055a7a8b55ac859a48462d722",
+        "version" : "10.54.5"
       }
     },
     {
@@ -14,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCComponents",
       "state" : {
-        "revision" : "494251c006077c26c12d33cda345eebcdce3398b",
-        "version" : "1.0.13"
+        "revision" : "aa7c544f9b7ddbe11daa9b4ae6e9ffb9fdbd2493",
+        "version" : "1.0.14"
       }
     },
     {
@@ -23,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GetSchooly/SCTokens",
       "state" : {
-        "revision" : "5b71220e2148e13cdab360919582b0dc8627a44d",
-        "version" : "1.16.3"
+        "revision" : "de09c5eb4acc8060008ce881e10e4972bc72bcf5",
+        "version" : "1.16.4"
       }
     }
   ],
