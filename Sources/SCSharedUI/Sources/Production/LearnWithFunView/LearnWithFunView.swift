@@ -3,7 +3,10 @@ import SCTokens
 import SCComponents
 
 public struct LearnWithFunView: View {
-    public init() {
+    private let tapOnSeeAll:(() -> Void)
+    
+    public init(tapOnSeeAll: @escaping (() -> Void)) {
+        self.tapOnSeeAll = tapOnSeeAll
         Font.loadMyFonts
     }
     
@@ -25,7 +28,7 @@ public struct LearnWithFunView: View {
             Spacer()
             SDButton("View all",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing))) {
-                
+                self.tapOnSeeAll()
             }
         }
         .padding(.horizontal, Spacing.spacing4x)
@@ -69,7 +72,7 @@ extension LearnWithFunView: HasExamples {
 
 #Preview {
     VStack(alignment: .center, content: {
-        LearnWithFunView()
+        LearnWithFunView(){}
     })
     .frame(height: 300)
 }

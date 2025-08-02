@@ -8,8 +8,10 @@ public struct DoActivitiesView: View {
     
     // your view model
     @StateObject var viewModel: DoActivitiesViewModel = DoActivitiesViewModel()
+    private let tapOnSeeAll:(() -> Void)
     
-    public init() {
+    public init(tapOnSeeAll: @escaping (() -> Void)) {
+        self.tapOnSeeAll = tapOnSeeAll
         setupUI()
         initViewModel()
     }
@@ -30,7 +32,7 @@ public struct DoActivitiesView: View {
             Spacer()
             SDButton("All activities",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing))) {
-                
+                tapOnSeeAll()
             }
         }
         .frame(height: Spacing.spacing5x)
@@ -58,5 +60,5 @@ private struct ActivitiesList: View {
 }
 
 #Preview {
-    DoActivitiesView()
+    DoActivitiesView{}
 }

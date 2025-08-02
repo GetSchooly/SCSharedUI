@@ -106,7 +106,7 @@ struct MyChildrenGridView: View {
                 }, onTap: {
                     self.onTap?()
                 })
-                    .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Sizing.rowHeight)
+                .frame(width: (proxy.size.width/2) - Spacing.spacing4x, height: Sizing.rowHeight)
                     .overlay {
                         GeometryReader(content: { geometry in
                             Color.clear.onAppear(perform: {

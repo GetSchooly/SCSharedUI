@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 import SCTokens
 import SCComponents
@@ -18,8 +16,6 @@ public struct EventDetailView: View {
     
     private func setupUI() {
         // setup for the UI
-       
-    
     }
     
     private func initViewModel() {
@@ -28,7 +24,6 @@ public struct EventDetailView: View {
     }
     
     public var body: some View {
-        
             VStack{
                 SDImage(.remote(url:
                                     data.image, placeholder: .none, scale: .infinity, contentMode: .fill, placement: .left))
@@ -50,24 +45,18 @@ public struct EventDetailView: View {
             .clipShape(RoundedRectangle.init(cornerRadius: 20))
             .padding(10)
              .shadow(.defaultGrayElevation)
-               
-                
-                
         }
     
 }
 
 #Preview {
     EventDetailView(false, EventListViewModel.sample)
-    
 }
-
-
 
 struct RoundedCorner: Shape {
     var radius: CGFloat = 25.0
     var corners: UIRectCorner = [.topLeft, .topRight]
-
+    
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(
             roundedRect: rect,

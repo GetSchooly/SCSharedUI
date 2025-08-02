@@ -8,8 +8,10 @@ public struct TodayReadView: View {
     
     // your view model
     @ObservedObject var viewModel: TodayReadViewModel = TodayReadViewModel()
+    private let tapOnSeeAll:(() -> Void)
     
-    public init() {
+    public init(tapOnSeeAll: @escaping (() -> Void)) {
+        self.tapOnSeeAll = tapOnSeeAll
         setupUI()
         initViewModel()
     }
@@ -30,7 +32,7 @@ public struct TodayReadView: View {
             Spacer()
             SDButton("See all",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing))) {
-                
+                self.tapOnSeeAll()
             }
         }
         .frame(height: Spacing.spacing5x)
@@ -62,5 +64,5 @@ private struct BlogCardList: View {
 }
 
 #Preview {
-    TodayReadView()
+    TodayReadView{}
 }
