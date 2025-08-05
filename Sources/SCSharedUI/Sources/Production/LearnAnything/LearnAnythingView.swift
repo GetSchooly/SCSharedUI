@@ -10,7 +10,6 @@ public struct LearnAnythingView: View {
     public init(userId: String, onTap: (() -> Void)? = nil) {
         self.userId = userId
         self.onTap = onTap
-        Font.loadMyFonts
     }
 
     public var body: some View {
@@ -130,12 +129,18 @@ extension LearnAnythingView {
     private var eduBuddySessionsView: some View {
         VStack(alignment: .leading) {
             sessionViewTitle
+                .padding(.top, Spacing.spacing4x)
+                .padding(.horizontal, Spacing.spacing4x)
+
+            Divider()
+                .foregroundStyle(Color.lightBlue)
+                .padding(.vertical, Spacing.spacing1x)
 
             ForEach(viewModel.recentSessions, id: \.id) { item in
                 HStack {
                     SDText(
                         item.question,
-                        style: .size100(
+                        style: .size90(
                             weight: .regular,
                             theme: .primary,
                             alignment: .leading
@@ -154,38 +159,42 @@ extension LearnAnythingView {
                     )
                 }
 
-                Divider()
-                    .foregroundStyle(Color.appBackground)
+                if item != viewModel.recentSessions.last {
+                    Divider()
+                        .foregroundStyle(Color.appBackground)
+                } else {
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(height: Sizing.sizing2x)
+                }
             }
+            .padding(.horizontal, Spacing.spacing4x)
         }
+        .background(Color.appwhite)
+        .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing5x))
+        .shadow(.defaultGrayElevation)
     }
 
     private var sessionViewTitle: some View {
-        VStack {
-            HStack {
-                aiTutorTitle
-                
-                SDButton(
-                    "Start New",
-                    buttonType: .primaryButton(
-                        .size100(
-                            weight: .semiBold,
-                            theme: .standard,
-                            alignment: .center
-                        )
-                    ),
-                    maxSize: true,
-                    onTapAction: {
-                        onTap?()
-                    }
-                )
-                .frame(width: Sizing.sizing12x * Sizing.sizing0xHalf, height: Sizing.sizing8x)
-                .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing5x))
-            }
+        HStack(alignment: .center) {
+            aiTutorTitle
 
-            Divider()
-                .foregroundStyle(Color.lightBlue)
-                .padding(.top, Spacing.spacing1x)
+            SDButton(
+                "Start New",
+                buttonType: .primaryButton(
+                    .size100(
+                        weight: .semiBold,
+                        theme: .standard,
+                        alignment: .center
+                    )
+                ),
+                maxSize: true,
+                onTapAction: {
+                    onTap?()
+                }
+            )
+            .frame(width: Sizing.sizing12x * Sizing.sizing0xHalf, height: Sizing.sizing8x)
+            .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing5x))
         }
     }
 }

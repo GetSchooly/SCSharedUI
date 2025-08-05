@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-public struct LearnAnythingModel: Codable {
+public struct LearnAnythingModel: Codable, Equatable {
     let id: Int
     let userID, sessionID, question, askedOn: String
     let sessionTime: String
