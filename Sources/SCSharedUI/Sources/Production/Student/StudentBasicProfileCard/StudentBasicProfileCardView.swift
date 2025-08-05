@@ -8,14 +8,13 @@ public enum StudentProfile {
 }
 
 public struct StudentProfileCardView: View {
-    
     @Environment(\.mainWindowSize) var mainWindowSize
     @ObservedObject private var viewModel: StudentProfileCardViewModel
-    
+
     private let type: StudentProfile
     private let onTapConnect: (() -> Void)?
     private let onTap: (() -> Void)?
-    
+
     public init(viewModel: StudentProfileCardViewModel, type: StudentProfile = .basic, onTapConnect: (() -> Void)? = nil, onTap: (() -> Void)? = nil) {
         self.viewModel = viewModel
         self.type = type
@@ -23,7 +22,7 @@ public struct StudentProfileCardView: View {
         self.onTap = onTap
         Font.loadMyFonts
     }
-    
+
     public var body: some View {
         Group {
             switch type {
@@ -41,7 +40,7 @@ public struct StudentProfileCardView: View {
             onTap?()
         }
     }
-    
+
     private var basicProfileView: some View {
         VStack(alignment: .center) {
             profileImage.padding(.bottom, Spacing.spacing2x)
@@ -51,7 +50,7 @@ public struct StudentProfileCardView: View {
 //        .padding(.vertical, Spacing.spacing3x)
         .frame(maxWidth: mainWindowSize.width * Constants.widthPercentage, maxHeight: Constants.viewHeight)
     }
-    
+
     private var advancedProfileView: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
@@ -66,7 +65,7 @@ public struct StudentProfileCardView: View {
             studentAdvancedInfoView
         }
     }
-    
+
     private var profileImage: some View {
         SDImage(.remote(url: viewModel.profileImageURL))
             .frame(width: Constants.profileImageSize, height: Constants.profileImageSize, alignment: .center)
@@ -89,7 +88,7 @@ public struct StudentProfileCardView: View {
                      .frame(height: Constants.connectButtonHeight)
         }
     }
-    
+
     private var studentBasicInfo: some View {
         VStack(alignment: type == .advanced ? .leading : .center) {
             SDText(viewModel.studentName, style: .size100(weight: .bold, theme: .primary))

@@ -11,10 +11,11 @@ protocol ThoughtOfDayServiceProtocol {
 }
 
 class ThoughtOfTheDayService: ThoughtOfDayServiceProtocol {
-    let apiClient = URLSessionAPIClient<ParentHomeEndpoint>()
+    let apiClient = URLSessionAPIClient()
 
     func getThoughtOfTheDay() -> AnyPublisher<ResponseModel<ThoughtOfTheDayModel>, Error> {
-        return apiClient.request(.getRandomThought)
+        let endPoint = ParentApiEndPoint.randomThought()
+        return apiClient.request(endPoint)
     }
 }
 

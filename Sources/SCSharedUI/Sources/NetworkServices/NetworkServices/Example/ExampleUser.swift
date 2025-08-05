@@ -15,12 +15,14 @@ public protocol ExampleUserServiceProtocol {
 }
 
 public class ExampleUserService: ExampleUserServiceProtocol {
-    let apiClient = URLSessionAPIClient<SignInEndPoint>()
+    let apiClient = URLSessionAPIClient()
 
     public init() { }
 
     public func getUsers() -> AnyPublisher<[ExampleUser], Error> {
-        let request = ExampleUserRequest(id: 1, name: "school app")
-        return apiClient.request(.sendParentOtp, body: request)
+        let endPoint = SignInEndPoint.sendParentOtp()
+        //TODO: - Fix this
+        let body = ExampleUserRequest(id: 1, name: "school app")
+        return apiClient.request(endPoint, body: body)
     }
 }

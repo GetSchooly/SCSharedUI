@@ -5,52 +5,64 @@ protocol CodableDataModel: Codable {}
 
 public struct EmptyDataModel: CodableDataModel {}
 
-public class URLSessionAPIClient<EndpointType: APIEndpointFinal>: APIClient {
+public final class URLSessionAPIClient: APIClient {
 
     public init() {}
 
-    public func request<T: Decodable, U: Encodable>(_ endpoint: EndpointType, body: U? = Optional<EmptyDataModel>.none) -> AnyPublisher<T, Error> {
-        let url = endpoint.baseURL.appendingPathComponent(endpoint.path)
-        var request = URLRequest(url: url)
-        request.httpMethod = endpoint.method.rawValue
+    public func request<T: Decodable, U: Encodable>(
+        _ endpoint: some APIEndpointFinal,
+        body: U? = Optional<EmptyDataModel>.none
+    ) -> AnyPublisher<T, Error> {
 
-        endpoint.headers?.forEach { request.addValue($0.value, forHTTPHeaderField: $0.key) }
+        let url = endpoint.baseURL.appendingPathComponent(endpoint.path)
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+
+        if let params = endpoint.parameters, endpoint.method == .get {
+            let queryItems = params
+                .filter { $0.value != nil }
+                .map { URLQueryItem(name: $0.key, value: "\($0.value!)") }
+            components?.queryItems = queryItems
+        }
+
+        guard let finalURL = components?.url else {
+            return Fail(error: APIError.invalidURL(url: endpoint.path)).eraseToAnyPublisher()
+        }
+
+        var request = URLRequest(url: finalURL)
+        request.httpMethod = endpoint.method.rawValue
+        request.timeoutInterval = 15
+
+        endpoint.headers?.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
+
         if let body = body {
             do {
-                let jsonData = try JSONEncoder().encode(body)
-                request.httpBody = jsonData
+                request.httpBody = try JSONEncoder().encode(body)
             } catch {
-                return Fail<T, Error>(error: APIError.other(reason: error)).eraseToAnyPublisher()
+                return Fail(error: APIError.other(reason: error)).eraseToAnyPublisher()
             }
         }
 
         return URLSession.shared.dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .background))
-            .tryMap { data, response -> Data in
-
-                guard let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) else {
-                    throw APIError.unknown
-                }
-                print("Response JSON: \(jsonObject)")
-
-                if let httpResponse = response as? HTTPURLResponse {
-                    guard (200...299).contains(httpResponse.statusCode) else {
-                        if let error = APIError.fromStatusCode(code: httpResponse.statusCode) {
-                            throw error
-                        } else {
-                            if let obj = jsonObject as? [String: AnyHashable],
-                               let meta = obj["meta"] as? [String: AnyHashable],
-                                let messgae = meta["successMessage"] as? String,
-                                !messgae.isEmpty {
-                                throw APIError.serverError(reason: messgae)
-                            }
-                            throw APIError.unknown
-                        }
-                    }
-                    return data
-                } else {
+            .tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse else {
                     throw APIError.noResponse
                 }
+
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    if let error = APIError.fromStatusCode(code: httpResponse.statusCode) {
+                        throw error
+                    } else {
+                        let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: AnyHashable]
+                        if let message = json?["meta"] as? [String: AnyHashable],
+                           let msg = message["successMessage"] as? String {
+                            throw APIError.serverError(reason: msg)
+                        }
+                        throw APIError.unknown
+                    }
+                }
+
+                return data
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()

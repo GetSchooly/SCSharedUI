@@ -23,10 +23,10 @@ protocol ParentProfileServiceProtocol {
 }
 
 class ParentProfileService: ParentProfileServiceProtocol {
-    let apiClient = URLSessionAPIClient<ParentHomeEndpoint>()
+    let apiClient = URLSessionAPIClient()
     
     func getParentProfile() -> AnyPublisher<ResponseModel<ParentProfileModel>, Error> {
-        return apiClient.request(.getParentProfile)
+        return apiClient.request(ParentApiEndPoint.parentProfile())
     }
 }
 

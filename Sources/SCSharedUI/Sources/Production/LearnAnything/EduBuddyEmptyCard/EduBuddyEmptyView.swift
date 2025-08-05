@@ -3,20 +3,16 @@ import SCTokens
 import SCComponents
 
 public struct EduBuddyEmptyView: View {
-    
-    // variables/properties
     private var onTap: (() -> Void)?
-    
-    // your view model
     @ObservedObject var viewModel: EduBuddyEmptyViewModel = EduBuddyEmptyViewModel()
-    
+
     public init(viewModel: EduBuddyEmptyViewModel, onTap: (() -> Void)? = nil) {
         self.onTap = onTap
         setupUI()
         initViewModel()
         Font.loadMyFonts
     }
-    
+
     public var body: some View {
         VStack(spacing: Spacing.spacing2x) {
             HStack {
@@ -28,7 +24,7 @@ public struct EduBuddyEmptyView: View {
         }
         .padding(.horizontal, Spacing.spacing4x)
     }
-    
+
     private var aiTutorTitle: some View {
         HStack(spacing: Spacing.spacing1x) {
             SDImage(.local(resource: "", iconSize: .small, contentMode: .fit))
@@ -37,7 +33,7 @@ public struct EduBuddyEmptyView: View {
             Spacer()
         }
     }
-    
+
     private var descriptionView: some View {
         VStack(alignment: .leading) {
             aiTutorTitle
@@ -52,7 +48,7 @@ public struct EduBuddyEmptyView: View {
         .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.3), width: Sizing.sizing0xQuarter))
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
-    
+
     private func setupUI() {
         // setup for the UI
     }

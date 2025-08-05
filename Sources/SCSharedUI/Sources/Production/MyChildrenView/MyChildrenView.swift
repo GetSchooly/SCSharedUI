@@ -3,7 +3,6 @@ import SCTokens
 import SCComponents
 
 public struct MyChildrenView: View {
-
     @StateObject private var viewModel = MyChildrenViewModel()
     @State private var refreshID = UUID()
 
@@ -45,7 +44,7 @@ public struct MyChildrenView: View {
     private var mainContentView: some View {
         GeometryReader { geometry in
             VStack {
-                titleAndFindMoreView
+//                titleAndFindMoreView
                 ScrollView(.horizontal) {
                     MyChildrenGridView(viewModel: viewModel, proxy: geometry, onTap:  {
                         onTap?()

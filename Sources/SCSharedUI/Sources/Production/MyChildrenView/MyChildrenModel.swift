@@ -16,7 +16,7 @@ public struct StudentData: Codable, Hashable {
     let studentName: String
     let studentProfileImage: String?
     let feeStatus: FeeStatus?
-    
+
     init(id: Int, studentName: String, studentProfileImage: String? = nil, feeStatus: FeeStatus = .none) {
         self.id = id
         self.studentName = studentName
@@ -38,18 +38,21 @@ protocol MyChildrenServiceProtocol {
 }
 
 class MyChildrenViewService: MyChildrenServiceProtocol {
-    let apiClient = URLSessionAPIClient<ParentHomeEndpoint>()
-
+    let apiClient = URLSessionAPIClient()
+    
     func fetchAllRegisteredChildren() -> AnyPublisher<ResponseModel<MyChildrenModel>, Error> {
-        return apiClient.request(.getAllRegisteredStudent)
+        let endpoint = ParentApiEndPoint.registeredStudent()
+        return apiClient.request(endpoint)
     }
 
     func fetchAllMarkedChildren() -> AnyPublisher<ResponseModel<MyChildrenModel>, Error> {
-        return apiClient.request(.getAllMarkStudent)
+        let endpoint = ParentApiEndPoint.markedStudent()
+        return apiClient.request(endpoint)
     }
 
     func linkChildToParent(_ childIds: [String]) -> AnyPublisher<ResponseModel<EmptyDataModel>, Error> {
-        return apiClient.request(.linkStudentandParent)
+        let endpoint = ParentApiEndPoint.myChildren(studentIds: childIds)
+        return apiClient.request(endpoint)
     }
 }
 
@@ -59,7 +62,7 @@ public extension StudentData {
         id: 1,
         studentName: "Test Name",
         studentProfileImage: "https://picsum.photos/seed/picsum/200/300"
-        )
+    )
 
     static let mockStudents: [StudentData] = [
         StudentData(
@@ -67,18 +70,18 @@ public extension StudentData {
             studentName: "Test Name",
             studentProfileImage: "https://picsum.photos/seed/picsum/200/300",
             feeStatus: .paid
-            ),
+        ),
         StudentData(
             id: 2,
             studentName: "Test Name",
             studentProfileImage: "https://picsum.photos/seed/picsum/200/300",
             feeStatus: .due
-            ),
+        ),
         StudentData(
             id: 3,
             studentName: "Test Name",
             studentProfileImage: "https://picsum.photos/seed/picsum/200/300",
             feeStatus: .paid
-            )
+        )
     ]
 }
