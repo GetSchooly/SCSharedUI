@@ -21,7 +21,7 @@ public struct LearnAnythingView: View {
                 
             case .loaded:
                 eduBuddySessionsView
-                    .padding(Spacing.spacing4x)
+                    .padding(.horizontal, Spacing.spacing4x)
 
             case .failed(let error):
                 LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
