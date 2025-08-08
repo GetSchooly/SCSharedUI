@@ -53,6 +53,15 @@ public enum ParentApiEndPoint {
             parameters: ["userId": userId]
         )
     }
+
+    static func getTeachersByStudent(studentId: String) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getStudentTeacher",
+            method: .get,
+            headers: headers,
+            parameters: ["studentId": studentId]
+        )
+    }
 }
 
 fileprivate var headers: [String: String]? {
