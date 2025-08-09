@@ -28,8 +28,8 @@ public struct ViewAllTodayReads: View {
     }
     
     private var readsList: some View {
-        List(viewModel.allTodayReads) { _ in
-            BlogCardView()
+        List(TodayReadModel.mockToadyReads) { item in
+            BlogCardView(BlogCardViewModel(blog: item))
                 .listRowSeparator(.hidden)
         }
         .listStyle(.plain)

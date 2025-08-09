@@ -1,15 +1,41 @@
 import Foundation
+import Combine
 
-class TodayReadViewModel: ObservableObject {
+class TodayReadViewModel: LoadableViewModel<[TodayReadModel]> {
     
-    // MARK:- Initialize
-    init() {
-        // Do something
-        
+    private lazy var todayReadService: TodayReadViewService = TodayReadViewService()
+    private var cancellables = Set<AnyCancellable>()
+    @Published private(set) var todayReads: [TodayReadModel] = []
+    
+   override init() {
+       super.init()
+        self.todayReads = mockTodayReads
+       observeTodayReads()
     }
     
-    // MARK: - Fetching functions
-    func fetchData() {
-        // Do something
+    private func observeTodayReads() {
+        $loadingState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                switch state {
+                case .loaded(let model):
+                    self.todayReads = model
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchTodayReadList(limit: Int, offset: Int) {
+        let publicer = todayReadService.fetchTodayReadList(limit: limit, offset: offset)
+        load(publisher: publicer)
+    }
+}
+
+extension TodayReadViewModel{
+    var mockTodayReads: [TodayReadModel]{
+        return TodayReadModel.mockToadyReads
     }
 }

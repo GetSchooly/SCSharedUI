@@ -28,7 +28,7 @@ import Combine
      }
 
      func fetchChildrenActivities(limit:Int, offset:Int) {
-         let publisher = childrenActivities.fetchChildrenActivities(limit: 10, offset: 0)
+         let publisher = childrenActivities.fetchChildrenActivities(limit: limit, offset: offset)
          load(publisher: publisher)
      }
 }

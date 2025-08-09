@@ -1,15 +1,29 @@
 import Foundation
 
 class BlogCardViewModel: ObservableObject {
-    
-    // MARK:- Initialize
-    init() {
-        // Do something
-        
+    private let blog: TodayReadModel
+    init(blog: TodayReadModel) {
+        self.blog = blog
     }
     
-    // MARK: - Fetching functions
-    func fetchData() {
-        // Do something
+    var imageURL: String {
+        blog.posterImage
     }
+    
+    var title: String {
+        blog.title
+    }
+    
+    var subtitle: String {
+        blog.description
+    }
+    
+    var date: String {
+        blog.formattedDate
+    }
+    var readingTime: String {
+        blog.readingTime
+    }
+    
+    
 }

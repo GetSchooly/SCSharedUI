@@ -12,14 +12,12 @@ public struct TodayReadView: View {
     
     public init(tapOnSeeAll: @escaping (() -> Void)) {
         self.tapOnSeeAll = tapOnSeeAll
-        setupUI()
-        initViewModel()
     }
     
     public var body: some View {
         VStack {
             titleAndFindMoreView
-            BlogCardList()
+            BlogCardList(todayReadData: viewModel.todayReads)
         }
         .padding(.leading, Spacing.spacing4x)
         .background(Color.clear)
@@ -37,24 +35,16 @@ public struct TodayReadView: View {
         }
         .frame(height: Spacing.spacing5x)
     }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
+
 }
 
 private struct BlogCardList: View {
-    
+    let todayReadData: [TodayReadModel]
     var body: some View {
         ScrollView(.horizontal) {
             HStack(spacing: Spacing.spacing4x) {
-                ForEach(0..<3) { item in
-                    BlogCardView()
+                ForEach(todayReadData.prefix(5)) { item in
+                    BlogCardView(BlogCardViewModel(blog: item))
                         .frame(width: UIScreen.main.bounds.size.width - 80)
                 }
             }
