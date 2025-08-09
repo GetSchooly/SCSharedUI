@@ -1,10 +1,10 @@
 import Foundation
 
 public class ActivityCardViewModel: ObservableObject {
-    private let activity: Activities
+    private let activity: DoActivitiesModel
     
     // MARK:- Initialize
-    public init(activity: Activities) {
+    public init(activity: DoActivitiesModel) {
         // Do something
         self.activity = activity
     }
@@ -18,12 +18,12 @@ public class ActivityCardViewModel: ObservableObject {
     }
     
     var subtitle: String {
-        activity.description
+        activity.description ?? ""
     }
 }
 
 extension ActivityCardViewModel {
-    var mockActivity: Activities {
-        Activities.mockActivity
+    var mockActivity: DoActivitiesModel {
+        DoActivitiesModel.mockActivity
     }
 }

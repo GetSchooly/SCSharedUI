@@ -24,21 +24,30 @@ public struct ActivityCardView: View {
     }
     
     private var cardView: some View {
-        HStack(alignment:.top) {
+        HStack {
             titleAndSubTitleView
             Spacer()
-            SDImage(.remote(url: viewModel.imageURL))
-                .frame(width: Sizing.activityImageWidth, height: Sizing.activityImageHeight)
+            SDImage(
+                .remote(
+                    url: viewModel.imageURL,
+                    contentMode: .fill
+                )
+            )
+            .frame(width: Sizing.activityImageWidth, height: Sizing.activityImageHeight)
+            .clipped()
         }
-        .padding(Spacing.spacing4x)
+        .padding(.horizontal, Spacing.spacing4x)
+        .padding(.top, Spacing.spacing2x)
+        .padding(.bottom, Spacing.spacing2x)
     }
     
     private var titleAndSubTitleView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: Spacing.spacing1x) {
             SDText(viewModel.title, style: .size90(weight: .semiBold, theme: .darkGray))
-                .padding(.bottom, Spacing.spacing0xQuarter)
-            
+                .lineLimit(1)
+
             SDText(viewModel.subtitle, style: .size90(weight: .regular, theme: .darkGray))
+                .lineLimit(2)
         }
         .padding(.trailing, Spacing.spacing2x)
     }
@@ -50,5 +59,5 @@ private extension Sizing {
 }
 
 #Preview {
-    ActivityCardView(ActivityCardViewModel(activity: Activities.mockActivity))
+    ActivityCardView(ActivityCardViewModel(activity: DoActivitiesModel.mockActivity))
 }

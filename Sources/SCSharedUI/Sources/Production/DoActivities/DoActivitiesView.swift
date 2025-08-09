@@ -3,29 +3,27 @@ import SCComponents
 import SCTokens
 
 public struct DoActivitiesView: View {
-    // variables/properties
-    // your view model
     @StateObject var viewModel: DoActivitiesViewModel = DoActivitiesViewModel()
     @State private var refreshId = UUID()
     private var tapOnSeeAll:(() -> Void)?
-    
+
     public init(tapOnSeeAll: (() -> Void)? = nil) {
         self.tapOnSeeAll = tapOnSeeAll
     }
-    
+
     public var body: some View {
         Group{
             switch viewModel.loadingState.viewLoadingState {
             case .idle, .loading:
                 mainContentView
                     .shimmer(isLoading: true)
-                
+
             case .loaded:
                 mainContentView
-                
+
             case .failed(let error):
                 LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
-                    refreshId = UUID()
+                    viewModel.fetchChildrenActivities(limit: 10, offset: 0)
                 }
             }
         }
@@ -33,7 +31,7 @@ public struct DoActivitiesView: View {
             viewModel.fetchChildrenActivities(limit: 10, offset: 0)
         }
     }
-    
+
     private var mainContentView: some View {
         VStack {
             titleAndFindMoreView
@@ -55,13 +53,17 @@ public struct DoActivitiesView: View {
         }
         .frame(height: Spacing.spacing5x)
     }
-    
+
     private var activityList: some View {
-        VStack(spacing: 0) {
+        VStack {
             ForEach(viewModel.activities.prefix(3)) { item in
                 ActivityCardView(ActivityCardViewModel(activity: item))
             }
         }
+        .padding(.top, Spacing.spacing2x)
+        .background(Color.appwhite)
+        .border(SCBorder(cornerRadius: Sizing.sizing4x, color: .grayStroke.opacity(0.3), width: Sizing.sizing0xQuarter))
+        .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
     }
 }
 

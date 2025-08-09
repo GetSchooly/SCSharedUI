@@ -54,7 +54,7 @@ public enum ParentApiEndPoint {
         )
     }
 
-    static func childrenActivities(limit:Int , offset:Int) -> APIEndpointFinal {
+    static func childrenActivities(limit:Int, offset:Int) -> APIEndpointFinal {
         return DefaultEndpoint(
             path: "getChildrenActivities",
             method: .get,
