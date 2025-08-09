@@ -3,28 +3,46 @@ import SCComponents
 import SCTokens
 
 public struct DoActivitiesView: View {
-    
     // variables/properties
-    
     // your view model
     @StateObject var viewModel: DoActivitiesViewModel = DoActivitiesViewModel()
-    private let tapOnSeeAll:(() -> Void)
+    @State private var refreshId = UUID()
+    private var tapOnSeeAll:(() -> Void)?
     
-    public init(tapOnSeeAll: @escaping (() -> Void)) {
+    public init(tapOnSeeAll: (() -> Void)? = nil) {
         self.tapOnSeeAll = tapOnSeeAll
-        setupUI()
-        initViewModel()
     }
     
     public var body: some View {
+        Group{
+            switch viewModel.loadingState.viewLoadingState {
+            case .idle, .loading:
+                mainContentView
+                    .shimmer(isLoading: true)
+                
+            case .loaded:
+                mainContentView
+                
+            case .failed(let error):
+                LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
+                    refreshId = UUID()
+                }
+            }
+        }
+        .task {
+            viewModel.fetchChildrenActivities(limit: 10, offset: 0)
+        }
+    }
+    
+    private var mainContentView: some View {
         VStack {
             titleAndFindMoreView
-            ActivitiesList()
+            activityList
         }
         .padding(.horizontal, Spacing.spacing4x)
         .background(Color.clear)
     }
-    
+
     @ViewBuilder
     private var titleAndFindMoreView: some View {
         HStack(alignment: .center) {
@@ -32,28 +50,16 @@ public struct DoActivitiesView: View {
             Spacer()
             SDButton("All activities",
                      buttonType: .noStyle(.size90(weight: .bold, theme: .royalBlue, alignment: .trailing))) {
-                tapOnSeeAll()
+                tapOnSeeAll?()
             }
         }
         .frame(height: Spacing.spacing5x)
     }
     
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
-}
-
-private struct ActivitiesList: View {
-    
-    var body: some View {
+    private var activityList: some View {
         VStack(spacing: 0) {
-            ForEach(0..<3) { item in
-                ActivityCardView(ActivityCardViewModel())
+            ForEach(viewModel.activities.prefix(3)) { item in
+                ActivityCardView(ActivityCardViewModel(activity: item))
             }
         }
     }

@@ -53,6 +53,15 @@ public enum ParentApiEndPoint {
             parameters: ["userId": userId]
         )
     }
+
+    static func childrenActivities(limit:Int , offset:Int) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getChildrenActivities",
+            method: .get,
+            headers: headers,
+            parameters: ["limit": String(limit), "offset": String(offset)]
+        )
+    }
 }
 
 fileprivate var headers: [String: String]? {
@@ -66,3 +75,4 @@ fileprivate var headers: [String: String]? {
 
     return headers
 }
+
