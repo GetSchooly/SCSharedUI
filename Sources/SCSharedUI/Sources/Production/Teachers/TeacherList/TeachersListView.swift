@@ -42,7 +42,10 @@ public struct TeachersListView: View {
                 if let classTeacher = viewModel.classTeacher {
                     TeacherProfileCard(
                         teacher: classTeacher,
-                        teacherType: "Class/\(classTeacher.subjectName)"
+                        teacherType: "Class/\(classTeacher.subjectName)",
+                        onTap: { option, contact in
+                            self.viewModel.handleTeacherContactAction(option, contact: contact)
+                        }
                     )
                     .frame(width: mainWindowSize.width/2)
                 }
@@ -67,13 +70,19 @@ public struct TeachersListView: View {
                 )
             )
             .frame(height: Sizing.sizing10x)
-            
+
             LazyVGrid(columns: columns){
                 ForEach(viewModel.otherTeachers){ teacher in
-                    TeacherProfileCard(teacher: teacher, teacherType: nil)
-                        .frame(width: mainWindowSize.width/2.4)
-                        .padding(.trailing, Spacing.spacing1x)
-                        .padding(.vertical, Spacing.spacing4x)
+                    TeacherProfileCard(
+                        teacher: teacher,
+                        teacherType: nil,
+                        onTap: { option, contact in
+                            self.viewModel.handleTeacherContactAction(option, contact: contact)
+                        }
+                    )
+                    .frame(width: mainWindowSize.width/2.4)
+                    .padding(.trailing, Spacing.spacing1x)
+                    .padding(.vertical, Spacing.spacing4x)
                 }
             }
         }
@@ -85,5 +94,3 @@ public struct TeachersListView: View {
     TeachersListView(studentId: "")
         .environment(\.mainWindowSize, UIScreen.main.bounds.size)
 }
-
-

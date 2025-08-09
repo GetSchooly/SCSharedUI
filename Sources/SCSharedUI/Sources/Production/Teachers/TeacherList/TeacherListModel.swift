@@ -10,7 +10,7 @@ struct TeacherListModel: Codable {
 public struct TeacherProfile: Codable, Identifiable {
     public let id: Int
     public let teacherName, subjectName: String
-    public let teacherProfileImage: String?
+    public let teacherProfileImage, contactNumber: String?
 }
 
 protocol TeacherListServiceProtocol {
@@ -32,7 +32,8 @@ extension TeacherListModel {
         id: 1,
         teacherName: "Sumit Awasthi",
         subjectName: "Mathematic",
-        teacherProfileImage: "https://picsum.photos/id/103/200/200"
+        teacherProfileImage: "https://picsum.photos/id/103/200/200",
+        contactNumber: "+911234567890"
     )
 
     static let mockTechers: TeacherListModel = .init(
@@ -41,31 +42,36 @@ extension TeacherListModel {
                 id: 1,
                 teacherName: "Sumit Awasthi",
                 subjectName: "Mathematic",
-                teacherProfileImage: "https://picsum.photos/id/103/200/200"
+                teacherProfileImage: "https://picsum.photos/id/103/200/200",
+                contactNumber: "+911234567890"
             ),
             TeacherProfile(
                 id: 2,
                 teacherName: "Arpit Yadav",
                 subjectName: "English",
-                teacherProfileImage: "https://picsum.photos/id/103/200/200"
+                teacherProfileImage: "https://picsum.photos/id/103/200/200",
+                contactNumber: "+911234567890"
             ),
             TeacherProfile(
                 id: 3,
                 teacherName: "Mic Joe",
                 subjectName: "English",
-                teacherProfileImage: "https://picsum.photos/id/103/200/200"
+                teacherProfileImage: "https://picsum.photos/id/103/200/200",
+                contactNumber: "+911234567890"
             ),
             TeacherProfile(
                 id: 4,
                 teacherName: "Bryan Long",
                 subjectName: "Arts",
-                teacherProfileImage: "https://picsum.photos/id/103/200/200"
+                teacherProfileImage: "https://picsum.photos/id/103/200/200",
+                contactNumber: "+911234567890"
             ),
             TeacherProfile(
-                id: 4,
+                id: 5,
                 teacherName: "Sumit Awasthi",
                 subjectName: "Science",
-                teacherProfileImage: "https://picsum.photos/id/103/200/200"
+                teacherProfileImage: "https://picsum.photos/id/103/200/200",
+                contactNumber: "+911234567890"
             )
         ]
     )

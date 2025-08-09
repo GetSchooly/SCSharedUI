@@ -1,4 +1,5 @@
 import Combine
+import UIKit
 import Foundation
 
 class TeacherListViewModel: LoadableViewModel<TeacherListModel> {
@@ -43,6 +44,16 @@ class TeacherListViewModel: LoadableViewModel<TeacherListModel> {
     func fetchStudentTeachersBy(_ studentId: String) {
         let publisher = teacherListService.getTeacherListBy(studentId: studentId)
         load(publisher: publisher)
+    }
+
+    func handleTeacherContactAction(_ option: ContactOption, contact: String) {
+        if option == .call,
+           let url = URL(string: "tel://\(contact)"),
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else if option == .chat {
+            // TODO: - chat contact - open inbox
+        }
     }
 }
 
