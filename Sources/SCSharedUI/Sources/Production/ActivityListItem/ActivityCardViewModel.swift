@@ -1,15 +1,29 @@
 import Foundation
 
 public class ActivityCardViewModel: ObservableObject {
+    private let activity: DoActivitiesModel
     
     // MARK:- Initialize
-    public init() {
+    public init(activity: DoActivitiesModel) {
         // Do something
-        
+        self.activity = activity
+    }
+
+    var imageURL: String {
+        activity.image
     }
     
-    // MARK: - Fetching functions
-    func fetchData() {
-        // Do something
+    var title: String {
+        activity.title
+    }
+    
+    var subtitle: String {
+        activity.description ?? ""
+    }
+}
+
+extension ActivityCardViewModel {
+    var mockActivity: DoActivitiesModel {
+        DoActivitiesModel.mockActivity
     }
 }

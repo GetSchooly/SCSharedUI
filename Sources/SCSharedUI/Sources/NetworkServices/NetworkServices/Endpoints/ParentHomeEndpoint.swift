@@ -54,12 +54,30 @@ public enum ParentApiEndPoint {
         )
     }
 
+
+    static func childrenActivities(limit:Int, offset:Int) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getChildrenActivities",
+            method: .get,
+            headers: headers,
+            parameters: ["limit": String(limit), "offset": String(offset)]
+        )
+    }
+    
+    static func todayReadList(limit:Int, offset:Int) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getTodaysRead",
+            method: .get,
+            headers: headers,
+            parameters: ["limit": String(limit), "offset": String(offset)]
+
     static func getTeachersByStudent(studentId: String) -> APIEndpointFinal {
         return DefaultEndpoint(
             path: "getStudentTeacher",
             method: .get,
             headers: headers,
             parameters: ["studentId": studentId]
+
         )
     }
 }
@@ -75,3 +93,4 @@ fileprivate var headers: [String: String]? {
 
     return headers
 }
+

@@ -7,12 +7,10 @@ public struct ActivityCardView: View {
     // variables/properties
     
     // your view model
-    @ObservedObject var viewModel: ActivityCardViewModel = ActivityCardViewModel()
+    @ObservedObject var viewModel: ActivityCardViewModel
     
     public init(_ viewModel: ActivityCardViewModel) {
         self.viewModel = viewModel
-        setupUI()
-        initViewModel()
     }
     
     public var body: some View {
@@ -26,32 +24,32 @@ public struct ActivityCardView: View {
     }
     
     private var cardView: some View {
-        HStack(alignment:.top) {
+        HStack {
             titleAndSubTitleView
             Spacer()
-            SDImage(.remote(url: "https://picsum.photos/id/1/400/300"))
-                .frame(width: Sizing.activityImageWidth, height: Sizing.activityImageHeight)
+            SDImage(
+                .remote(
+                    url: viewModel.imageURL,
+                    contentMode: .fill
+                )
+            )
+            .frame(width: Sizing.activityImageWidth, height: Sizing.activityImageHeight)
+            .clipped()
         }
-        .padding(Spacing.spacing4x)
+        .padding(.horizontal, Spacing.spacing4x)
+        .padding(.top, Spacing.spacing2x)
+        .padding(.bottom, Spacing.spacing2x)
     }
     
     private var titleAndSubTitleView: some View {
-        VStack(alignment: .leading) {
-            SDText("DIY Science Experiments", style: .size90(weight: .semiBold, theme: .darkGray))
-                .padding(.bottom, Spacing.spacing0xQuarter)
-            
-            SDText("Search for “simple science experiments for kids” to find visuals...", style: .size90(weight: .regular, theme: .darkGray))
+        VStack(alignment: .leading, spacing: Spacing.spacing1x) {
+            SDText(viewModel.title, style: .size90(weight: .semiBold, theme: .darkGray))
+                .lineLimit(1)
+
+            SDText(viewModel.subtitle, style: .size90(weight: .regular, theme: .darkGray))
+                .lineLimit(2)
         }
         .padding(.trailing, Spacing.spacing2x)
-    }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
     }
 }
 
@@ -61,5 +59,5 @@ private extension Sizing {
 }
 
 #Preview {
-    ActivityCardView(ActivityCardViewModel())
+    ActivityCardView(ActivityCardViewModel(activity: DoActivitiesModel.mockActivity))
 }
