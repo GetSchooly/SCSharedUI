@@ -2,7 +2,6 @@ import Combine
 import Foundation
 
 class ThoughtOfTheDayViewModel: LoadableViewModel<ThoughtOfTheDayModel> {
-
     private lazy var thoughtOfTheDayService: ThoughtOfTheDayService = .init()
     private var cancellables: Set<AnyCancellable> = []
     private(set) var thoughtOfTheDay = ThoughtOfTheDayModel.mockThought

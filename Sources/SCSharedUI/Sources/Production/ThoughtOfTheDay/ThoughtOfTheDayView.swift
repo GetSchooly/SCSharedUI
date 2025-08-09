@@ -3,13 +3,11 @@ import SCTokens
 import SCComponents
 
 public struct ThoughtOfTheDayView: View {
-
-    // your view model
     @StateObject var viewModel: ThoughtOfTheDayViewModel = ThoughtOfTheDayViewModel()
     @State private var refreshID: UUID = UUID()
     
     public init() { }
-    
+
     public var body: some View {
         LoadableView(refreshTrigger: refreshID,
                      viewModel: viewModel,
@@ -24,7 +22,7 @@ public struct ThoughtOfTheDayView: View {
                 case .loaded:
                     mainContentView
                     
-                case .failed(let error):
+                case .failed(_):
                     // refreshID = UUID()
                     EmptyView()
                 }

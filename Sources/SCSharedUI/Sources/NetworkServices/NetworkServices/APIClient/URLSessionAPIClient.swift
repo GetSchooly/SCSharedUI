@@ -66,17 +66,37 @@ public final class URLSessionAPIClient: APIClient {
                         throw APIError.unknown
                     }
                 }
-
                 return data
             }
-            .decode(type: T.self, decoder: JSONDecoder())
+            .tryMap { data in
+                do {
+                    return try JSONDecoder().decode(T.self, from: data)
+                } catch let DecodingError.dataCorrupted(context) {
+                    Logger.failure("Data corrupted: \(context.debugDescription) at path: \(context.codingPath)")
+                    Logger.failure("Raw JSON: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                    throw DecodingError.dataCorrupted(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    Logger.failure("Missing key: \(key.stringValue) at path: \(context.codingPath)")
+                    Logger.failure("Raw JSON: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                    throw DecodingError.keyNotFound(key, context)
+                } catch let DecodingError.typeMismatch(type, context) {
+                    Logger.failure("Type mismatch for type \(type) at path: \(context.codingPath)")
+                    Logger.failure("Debug description: \(context.debugDescription)")
+                    Logger.failure("Raw JSON: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                    throw DecodingError.typeMismatch(type, context)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    Logger.failure("Value not found for \(value) at path: \(context.codingPath)")
+                    Logger.failure("Raw JSON: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                    throw DecodingError.valueNotFound(value, context)
+                } catch {
+                    Logger.failure("Unknown decoding error: \(error.localizedDescription)")
+                    Logger.failure("Raw JSON: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                    throw error
+                }
+            }
             .handleEvents(
                 receiveOutput: { _ in
                     Logger.success("Successfully decoded \(T.self)")
-                }, receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
-                        Logger.failure("Decoding or networking error: \(error.localizedDescription)")
-                    }
                 }
             )
             .eraseToAnyPublisher()
