@@ -2,9 +2,9 @@ import Foundation
 import Combine
 
 public struct LearnAnythingModel: Codable, Equatable {
-    let id: Int
-    let userID, sessionID, question, askedOn: String
-    let sessionTime: String
+    public let id: Int
+    public let userID, sessionID, question, askedOn: String
+    public let sessionTime: String
 
     enum CodingKeys: String, CodingKey {
         case id

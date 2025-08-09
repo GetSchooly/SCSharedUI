@@ -2,14 +2,20 @@ import SwiftUI
 import SCTokens
 import SCComponents
 
+public extension Notification.Name {
+    static let refreshEduBuddySessions = Notification.Name("Refresh_EduBuddy_Sessions")
+}
+
 public struct LearnAnythingView: View {
     private let userId: String
     private let onTap: (() -> Void)?
+    private let onTapItem:((LearnAnythingModel) -> Void)?
     @StateObject private var viewModel: LearnAnythingViewModel = .init()
 
-    public init(userId: String, onTap: (() -> Void)? = nil) {
+    public init(userId: String, onTap: (() -> Void)? = nil, onTapItem: ((LearnAnythingModel) -> Void)? = nil) {
         self.userId = userId
         self.onTap = onTap
+        self.onTapItem = onTapItem
     }
 
     public var body: some View {
@@ -18,7 +24,7 @@ public struct LearnAnythingView: View {
             case .idle, .loading:
                 noSessionContentView
                     .shimmer(isLoading: true)
-                
+
             case .loaded:
                 eduBuddySessionsView
                     .padding(.horizontal, Spacing.spacing4x)
@@ -32,6 +38,13 @@ public struct LearnAnythingView: View {
         .task {
             viewModel.fetchAllRecentSessionByUserId(userId)
         }
+        .onReceive(
+            Notifier.shared.publisher(.refreshEduBuddySessions), perform: { _ in
+                Task {
+                    viewModel.fetchAllRecentSessionByUserId(userId)
+                }
+            }
+        )
     }
 
     private var noSessionContentView: some View {
@@ -157,6 +170,9 @@ extension LearnAnythingView {
                             contentMode: .fit,
                         )
                     )
+                }
+                .onTapGesture {
+                    onTapItem?(item)
                 }
 
                 if item != viewModel.recentSessions.last {

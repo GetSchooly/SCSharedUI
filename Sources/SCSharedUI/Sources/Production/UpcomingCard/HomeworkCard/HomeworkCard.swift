@@ -63,7 +63,11 @@ public struct HomeworkCard: View {
 extension HomeworkCard: HasExamples {
     static var examples: [Example] {
         [Example("LearnWithFunCardView", width: 300, height: 300) {
-            LearnWithFunCardView()
+            LearnWithFunCardView(
+                subjectImageUrl: "",
+                subjectName: "Maths",
+                numberOfTakers: 231
+            )
         }]
     }
 }

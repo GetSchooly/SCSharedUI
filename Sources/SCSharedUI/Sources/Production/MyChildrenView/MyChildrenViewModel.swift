@@ -2,10 +2,8 @@ import Combine
 import Foundation
 
 class MyChildrenViewModel: LoadableViewModel<MyChildrenModel> {
-
     private lazy var mychildrenService: MyChildrenViewService = MyChildrenViewService()
     private var cancellables = Set<AnyCancellable>()
-
     @Published private(set) var markedChildren: [StudentData] = []
     @Published private(set) var shoudlFindChildren: Bool = false
     
@@ -42,7 +40,7 @@ class MyChildrenViewModel: LoadableViewModel<MyChildrenModel> {
 }
 
 //MARK: - Shimmering
-extension MyChildrenViewModel {
+private extension MyChildrenViewModel {
     var mockStudents: [StudentData] {
         StudentData.mockStudents
     }

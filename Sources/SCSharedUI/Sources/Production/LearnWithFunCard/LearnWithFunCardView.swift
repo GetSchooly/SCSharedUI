@@ -3,22 +3,24 @@ import SCComponents
 import SCTokens
 
 public struct LearnWithFunCardView: View {
-    
-    // variables/properties
-    
-    // your view model
-    @ObservedObject var viewModel: UpcomingCardViewModel = UpcomingCardViewModel(isShadow: true)
-    
-    public init() {
-        Font.loadMyFonts
-        setupUI()
-        initViewModel()
+    private let subjectImageUrl: String
+    private let subjectName: String
+    private let numberOfTakers: Int
+
+    public init(
+        subjectImageUrl: String,
+        subjectName: String,
+        numberOfTakers: Int
+    ) {
+        self.subjectImageUrl = subjectImageUrl
+        self.subjectName = subjectName
+        self.numberOfTakers = numberOfTakers
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading) {
             VStack {
-                SDImage(.remote(url: "https://picsum.photos/id/103/600/600", contentMode: .fit))
+                SDImage(.remote(url: subjectImageUrl, contentMode: .fit))
                     .frame(width: Sizing.sizing12x, height: Sizing.sizing12x)
                     .padding(.bottom, Spacing.spacing3x)
                     .clipped()
@@ -26,27 +28,34 @@ public struct LearnWithFunCardView: View {
             .padding(.horizontal, Sizing.sizing9x)
             .padding(.vertical, Sizing.sizing9x)
             .background(Color.lightBlue)
-            
-            VStack(alignment: .leading, content: {
-                SDText("Science", style: .size90(weight: .bold, theme: .primary))
+
+            VStack(
+                alignment: .leading,
+                content: {
+                    SDText(
+                        subjectName,
+                        style: .size90(
+                            weight: .bold,
+                            theme: .primary
+                        )
+                    )
                     .padding(.bottom, Spacing.spacing1x)
-                SDText("212 People taken", style: .size75(weight: .regular, theme: .primary))
-            })
+
+                    SDText(
+                        "\(numberOfTakers) People taken",
+                        style: .size75(
+                            weight: .regular,
+                            theme: .primary
+                        )
+                    )
+                }
+            )
             .padding(.top, Spacing.spacing1x)
         }
         .padding(Sizing.sizing4x)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing4x))
         .shadow(SDElevation.defaultGrayElevation)
-    }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
     }
 }
 
@@ -57,13 +66,21 @@ private struct Constants {
 extension LearnWithFunCardView: HasExamples {
     static var examples: [Example] {
         [Example("LearnWithFunCardView", width: 300, height: 300) {
-            LearnWithFunCardView()
+            LearnWithFunCardView(
+                subjectImageUrl: QuizSubjectModel.mockSubject.icon,
+                subjectName: QuizSubjectModel.mockSubject.title,
+                numberOfTakers: QuizSubjectModel.mockSubject.attemptedCount
+            )
         }]
     }
 }
 
 #Preview {
-    LearnWithFunCardView()
-        .frame(width: 161, height: 183)
+    LearnWithFunCardView(
+        subjectImageUrl: QuizSubjectModel.mockSubject.icon,
+        subjectName: QuizSubjectModel.mockSubject.title,
+        numberOfTakers: QuizSubjectModel.mockSubject.attemptedCount
+    )
+    .frame(width: 161, height: 183)
 }
 

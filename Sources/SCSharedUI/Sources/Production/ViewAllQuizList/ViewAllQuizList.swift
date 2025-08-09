@@ -32,7 +32,10 @@ public struct ViewAllQuizList: View {
                 
                 ForEach(viewModel.allTodayReads, id: \.self) { item in
                     
-                    LearnWithFunCardView()
+                    LearnWithFunCardView(
+                        subjectImageUrl: "",
+                        subjectName: "Maths",
+                        numberOfTakers: 11)
                         .padding(5)
                     
                 }

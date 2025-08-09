@@ -112,7 +112,8 @@ open class LoadableViewModel<T: Codable>: ObservableObject {
                 if let response = value.response {
                     self?.loadingState = .loaded(response)
                 } else {
-                    self?.loadingState = .failed(APIError.serverError(reason: value.meta.successMessage ?? ""))
+
+                    self?.loadingState = .failed(APIError.serverError(reason: value.meta.successMessage ?? "Something went wrong!!"))
                 }
             })
     }
