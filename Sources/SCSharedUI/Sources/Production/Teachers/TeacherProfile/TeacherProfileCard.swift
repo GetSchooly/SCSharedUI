@@ -3,11 +3,13 @@ import SCComponents
 import SCTokens
 
 struct TeacherProfileCard: View {
-        
+    let teacher: TeacherProfile
+    let teacherType: String?
+
     var body: some View {
         VStack {
             VStack {
-                SDImage(.remote(url: "https://picsum.photos/id/103/200/200", contentMode: .fill))
+                SDImage(.remote(url: teacher.teacherProfileImage ?? "", contentMode: .fill))
                     .frame(width: Sizing.profileImageSize - Spacing.spacing2x, height: Sizing.profileImageSize - Spacing.spacing2x)
                     .background(Color.royalBlue)
                     .clipShape(.circle)
@@ -16,18 +18,31 @@ struct TeacherProfileCard: View {
             .background(Color.royalBlue10)
             .clipShape(.circle)
             .padding(.top, Spacing.spacing5x)
-            
-            SDText("Teacher's name", style: .size100(weight: .bold, theme: .primary, alignment: .leading))
+
+            SDText(teacher.teacherName, style: .size100(weight: .bold, theme: .primary, alignment: .leading))
                 .padding(.top, Spacing.spacing2x)
                 .padding(.horizontal, Spacing.spacing2x)
-            
-            SDText("Class Teacher", style: .size90(weight: .medium, theme: .primary, alignment: .leading))
-                .padding(.top, Spacing.spacing0x)
-                .padding(.horizontal, Spacing.spacing2x)
-            
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
+
+            SDText(
+                "\(teacherType ?? teacher.subjectName) Teacher",
+                style: .size90(
+                    weight: .medium,
+                    theme: .primary,
+                    alignment: .leading
+                )
+            )
+            .padding(.top, Spacing.spacing0x)
+            .padding(.horizontal, Spacing.spacing2x)
+            .lineLimit(1)
+            .frame(maxWidth: .infinity)
+
             contactButtons()
                 .padding(.top, Spacing.spacing1x)
-            
+                .padding(.bottom, Spacing.spacing5x)
+
+            /*
             VStack {
                 SDText("Lorem ipsum is used to emphasize the design over.Lorem ipsum is used to emphasize the design over.Lorem ipsum is used to emphasize the design over.Lorem ipsum is used to emphasize the design over.",
                        style: .size90(weight: .medium, theme: .secondry, alignment: .leading))
@@ -39,8 +54,8 @@ struct TeacherProfileCard: View {
             }
             .background(Color.lightBlue)
             .padding(.top , Spacing.spacing3x)
+             */
         }
-        
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing5x))
         .shadow(.defaultGrayElevation)
@@ -82,20 +97,20 @@ private extension Sizing {
 extension TeachersListView: HasExamples {
     static var examples: [Example] {
         [Example("TeachersListView One card", width: 240, height: 220) {
-            TeacherProfileCard()
+            TeacherProfileCard(teacher: TeacherListModel.mockATeacher, teacherType: "Class")
         },
          Example("TeachersListView Two card", width: 300, height: 150) {
             HStack(spacing: 16) {
-                TeacherProfileCard()
-                TeacherProfileCard()
+                TeacherProfileCard(teacher: TeacherListModel.mockATeacher, teacherType: "Class")
+                TeacherProfileCard(teacher: TeacherListModel.mockATeacher, teacherType: nil)
             }
          }]
     }
 }
 
 #Preview {
-    TeacherProfileCard()
+    TeacherProfileCard(teacher: TeacherListModel.mockATeacher, teacherType: "Class")
         .padding(.horizontal, 72)
-    .environment(\.mainWindowSize, UIScreen.main.bounds.size)
-    .padding(16)
+        .environment(\.mainWindowSize, UIScreen.main.bounds.size)
+        .padding(16)
 }

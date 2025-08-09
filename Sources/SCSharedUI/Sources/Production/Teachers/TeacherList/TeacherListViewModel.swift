@@ -1,20 +1,54 @@
+import Combine
+import Foundation
 
-import SwiftUI
+class TeacherListViewModel: LoadableViewModel<TeacherListModel> {
+    private lazy var teacherListService = TeacherListViewService()
+    private var cancellables: Set<AnyCancellable> = []
+    @Published var teacherList: TeacherListModel?
 
-public class TeacherListViewModel: ObservableObject {
-    var teacherList: [TeacherDetailModel] = []
-    
-    static let sample: TeacherDetailModel = TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: true)
-    
-    public init() {
-        self.teacherList = [ TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: true),
-                             TeacherDetailModel(name: "Arpit Yadav", profile: "https://picsum.photos/id/103/200/200", subject: "English", specialization: "In English", contactNumber: "9007217345", isClassTeacher: false),
-                             TeacherDetailModel(name: "Mic Joe", profile: "https://picsum.photos/id/103/200/200", subject: "History", specialization: "In History", contactNumber: "9007217345", isClassTeacher: false),
-                             TeacherDetailModel(name: "Bryan Long", profile: "https://picsum.photos/id/103/200/200", subject: "Physics", specialization: "In Physics", contactNumber: "9007217345", isClassTeacher: false),
-                             TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: false),
-                             TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: false),TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: false),TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: false),TeacherDetailModel(name: "Sumit Awasthi", profile: "https://picsum.photos/id/103/200/200", subject: "Mathematic", specialization: "In Maths", contactNumber: "9007217345", isClassTeacher: false)]
-                             
+    override init() {
+        super.init()
+        teacherList = mockTeachers
+        observeUpdateMarkedChildren()
+    }
+
+    var classTeacher: TeacherProfile? {
+        teacherList?.studentTask.first
+    }
+
+    var otherTeachers: [TeacherProfile] {
+        guard let teachers = teacherList?.studentTask, teachers.count > 1 else {
+            return []
+        }
+
+        return Array(teachers.dropFirst())
+    }
+
+    private func observeUpdateMarkedChildren() {
+        $loadingState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                switch state {
+                case .loaded(let model):
+                    self.teacherList = model
+                    break
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    func fetchStudentTeachersBy(_ studentId: String) {
+        let publisher = teacherListService.getTeacherListBy(studentId: studentId)
+        load(publisher: publisher)
     }
 }
 
-
+//MARK: - Shimmering
+private extension TeacherListViewModel {
+    var mockTeachers: TeacherListModel {
+        TeacherListModel.mockTechers
+    }
+}

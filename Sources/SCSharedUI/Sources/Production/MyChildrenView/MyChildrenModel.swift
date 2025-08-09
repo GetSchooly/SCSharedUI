@@ -39,7 +39,7 @@ protocol MyChildrenServiceProtocol {
 
 class MyChildrenViewService: MyChildrenServiceProtocol {
     let apiClient = URLSessionAPIClient()
-    
+
     func fetchAllRegisteredChildren() -> AnyPublisher<ResponseModel<MyChildrenModel>, Error> {
         let endpoint = ParentApiEndPoint.registeredStudent()
         return apiClient.request(endpoint)
