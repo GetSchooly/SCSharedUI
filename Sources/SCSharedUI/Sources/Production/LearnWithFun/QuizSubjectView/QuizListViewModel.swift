@@ -5,6 +5,7 @@ class QuizSubjectsViewModel: LoadableViewModel<[QuizSubjectModel]> {
     private lazy var quizSubjectsService: QuizSubjectsService = .init()
     private var cancellables: Set<AnyCancellable> = []
     @Published private(set) var quizSubjects: [QuizSubjectModel] = []
+    @Published var selectedSubject: QuizSubjectModel?
 
     override init() {
         super.init()
@@ -33,5 +34,9 @@ class QuizSubjectsViewModel: LoadableViewModel<[QuizSubjectModel]> {
 
     func setQuizSubjects(_ subjects: [QuizSubjectModel]) {
         self.quizSubjects = subjects
+    }
+
+    func selectedSubject(_ subject: QuizSubjectModel) {
+        selectedSubject = subject
     }
 }
