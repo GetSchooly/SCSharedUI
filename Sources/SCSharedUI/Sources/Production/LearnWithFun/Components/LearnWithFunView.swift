@@ -4,10 +4,16 @@ import SCComponents
 
 struct LearnWithFunHomeView: View {
     @ObservedObject private var viewModel: QuizSubjectsViewModel
+    private let onTapSubject:((QuizSubjectModel) -> Void)?
     private let onTapSeeAll:(() -> Void)?
 
-    init(viewModel: QuizSubjectsViewModel, onTapSeeAll: (() -> Void)? = nil) {
+    init(
+        viewModel: QuizSubjectsViewModel,
+        onTapSubject:((QuizSubjectModel) -> Void)? = nil,
+        onTapSeeAll: (() -> Void)? = nil
+    ) {
         self.viewModel = viewModel
+        self.onTapSubject = onTapSubject
         self.onTapSeeAll = onTapSeeAll
     }
 
@@ -15,7 +21,9 @@ struct LearnWithFunHomeView: View {
         VStack {
             titleAndViewAllView
             ScrollView(.horizontal) {
-                LearnWithFunGridView(viewModel: viewModel)
+                LearnWithFunGridView(viewModel: viewModel) { model in
+                    onTapSubject?(model)
+                }
             }
             .scrollIndicators(.never)
             .padding(.top, -Spacing.spacing2x)
@@ -40,13 +48,15 @@ struct LearnWithFunHomeView: View {
 fileprivate struct LearnWithFunGridView: View {
     @ObservedObject private var viewModel: QuizSubjectsViewModel
     @State private var contentSizeHeight = Sizing.sizing0x
+    private let onTapSubject:((QuizSubjectModel) -> Void)?
 
     private let columns = [
         GridItem()
     ]
 
-    init(viewModel: QuizSubjectsViewModel) {
+    init(viewModel: QuizSubjectsViewModel, onTapSubject:((QuizSubjectModel) -> Void)? = nil) {
         self.viewModel = viewModel
+        self.onTapSubject = onTapSubject
     }
 
     var body: some View {
@@ -65,6 +75,9 @@ fileprivate struct LearnWithFunGridView: View {
                         })
                     })
                 }
+                .onTapGesture {
+                    onTapSubject?(subject)
+                }
             }
         }
         .frame(height: contentSizeHeight + Spacing.spacing6x)
@@ -81,7 +94,7 @@ extension LearnWithFunHomeView: HasExamples {
 
 #Preview {
     VStack(alignment: .center, content: {
-        LearnWithFunHomeView(viewModel: QuizSubjectsViewModel()){}
+        LearnWithFunHomeView(viewModel: QuizSubjectsViewModel(), onTapSeeAll: {})
     })
     .frame(height: 300)
 }
