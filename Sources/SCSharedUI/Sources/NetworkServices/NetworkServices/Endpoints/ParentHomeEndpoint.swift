@@ -69,7 +69,8 @@ public enum ParentApiEndPoint {
             path: "getTodaysRead",
             method: .get,
             headers: headers,
-            parameters: ["limit": String(limit), "offset": String(offset)]
+            parameters: ["limit": String(limit), "offset": String(offset)])
+    }
 
     static func getTeachersByStudent(studentId: String) -> APIEndpointFinal {
         return DefaultEndpoint(

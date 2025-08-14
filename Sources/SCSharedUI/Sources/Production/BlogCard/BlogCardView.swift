@@ -30,9 +30,9 @@ struct BlogCardView: View {
                 
     
             HStack(content: {
-                SDButton(viewModel.date, buttonType: .noStyle(.size75(weight: .regular, theme: .secondry)), spacing: Spacing.spacing1xHalf, icon: .local(resource: Icons.ic_notification.value, iconSize: .extraSmall, contentMode: .fit)) {}
+                SDButton(viewModel.date, buttonType: .noStyle(.size75(weight: .regular, theme: .secondry)), spacing: Spacing.spacing1xHalf, icon: .local(resource: Icons.ic_Rectangle.value, iconSize: .extraSmall, contentMode: .fit)) {}
                 
-                SDButton("\(viewModel.readingTime) read", buttonType: .noStyle(.size75(weight: .regular, theme: .secondry)), spacing: Spacing.spacing1xHalf, icon: .local(resource: Icons.ic_notification.value, iconSize: .extraSmall, contentMode: .fit)) {}
+                SDButton("\(viewModel.readingTime) min read", buttonType: .noStyle(.size75(weight: .regular, theme: .secondry)), spacing: Spacing.spacing1xHalf, icon: .local(resource: Icons.ic_Rectangle.value, iconSize: .extraSmall, contentMode: .fit)) {}
             })
             .padding(.leading, -Spacing.spacing2x)
             .padding(.top, -Spacing.spacing2xHalf)

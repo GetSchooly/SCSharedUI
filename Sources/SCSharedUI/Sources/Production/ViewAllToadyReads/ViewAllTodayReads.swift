@@ -4,39 +4,49 @@ import SCTokens
 import SCComponents
 
 public struct ViewAllTodayReads: View {
-   
+
+    private var tapOnTodayRead:((_ data: TodayReadModel) -> Void)?
     @StateObject var viewModel: AllTodayReadsViewModel = AllTodayReadsViewModel()
-    
-    public init() {
-        setupUI()
-        initViewModel()
+
+   public init(_ tapOnTodayRead: ((_ data: TodayReadModel) -> Void)? = nil) {
+       self.tapOnTodayRead = tapOnTodayRead
     }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
-    
+
     public var body: some View {
-        VStack {
-            readsList
+        Group{
+            switch viewModel.loadingState.viewLoadingState {
+            case .idle, .loading:
+                readsList
+                    .shimmer(isLoading: true)
+
+            case .loaded:
+                readsList
+
+            case .failed(let error):
+                LoadingViewHelper.errorView(errorMessage: error.localizedDescription) {
+                    viewModel.fetchTodayReadList(limit: 10, offset: 0)
+                }
+            }
+        }
+        .task {
+            viewModel.fetchTodayReadList(limit: 10, offset: 0)
         }
     }
     
     private var readsList: some View {
-        List(TodayReadModel.mockToadyReads) { item in
-            BlogCardView(BlogCardViewModel(blog: item))
-                .listRowSeparator(.hidden)
+        VStack {
+            List(viewModel.todayReads) { item in
+                BlogCardView(BlogCardViewModel(blog: item))
+                    .listRowSeparator(.hidden)
+                    .onTapGesture {
+                        tapOnTodayRead?(item)
+                    }
+            }
+            .listStyle(.plain)
         }
-        .listStyle(.plain)
-        
     }
 }
 
 #Preview {
-    ViewAllTodayReads()
+    ViewAllTodayReads{data in }
 }

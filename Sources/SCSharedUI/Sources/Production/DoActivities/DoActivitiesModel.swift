@@ -7,7 +7,7 @@ enum Difficulty: String, Codable {
     case hard = "Hard"
 }
 
-public struct DoActivitiesModel: Codable, Identifiable {
+public struct DoActivitiesModel: Codable, Identifiable , Hashable {
     public let id: Int
     let title: String
     let image: String

@@ -19,7 +19,7 @@ class BlogCardViewModel: ObservableObject {
     }
     
     var date: String {
-        blog.formattedDate
+        blog.postedAt
     }
     var readingTime: String {
         blog.readingTime

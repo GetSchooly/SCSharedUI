@@ -6,26 +6,44 @@
 //
 
 import Foundation
-class AllTodayReadsViewModel: ObservableObject {
+import Combine
 
-    var allTodayReads: [ReadDataModel] = []
-
-    init() {
-        // Do something
-        allTodayReads = [
-            ReadDataModel(name: "Upcomming assignment", lastMessage: "Thank you very much teacher!"),
-            ReadDataModel(name: "Bus is arrving in time", lastMessage: "Please be on time in your destination!"),
-            ReadDataModel(name: "Vikash Singh", lastMessage: "Don't worry, Your today homework will be shared here."),
-            ReadDataModel(name: "Maya Desai", lastMessage: "Thank you very much teacher!"),
-            ReadDataModel(name: "Eva Bond", lastMessage: "Great work!"),
-            ReadDataModel(name: "Vikash Singh", lastMessage: "Don't worry, Your today homework will be shared here."),
-            ReadDataModel(name: "Maya Desai", lastMessage: "Thank you very much teacher!"),
-            ReadDataModel(name: "Eva Bond", lastMessage: "Great work!"),
-            ReadDataModel(name: "Vikash Singh", lastMessage: "Don't worry, Your today homework will be shared here.")
-        ]
+class AllTodayReadsViewModel: LoadableViewModel<[TodayReadModel]> {
+    
+    private lazy var todayReadService: TodayReadViewService = TodayReadViewService()
+    private var cancellables = Set<AnyCancellable>()
+    @Published private(set) var todayReads: [TodayReadModel] = []
+    
+   override init() {
+       super.init()
+        self.todayReads = mockTodayReads
+       observeTodayReads()
     }
-
-    func fetchData() {
-        // Do something
+    
+    private func observeTodayReads() {
+        $loadingState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                switch state {
+                case .loaded(let model):
+                    self.todayReads = model
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchTodayReadList(limit: Int, offset: Int) {
+        let publicer = todayReadService.fetchTodayReadList(limit: limit, offset: offset)
+        load(publisher: publicer)
     }
 }
+
+extension AllTodayReadsViewModel{
+    var mockTodayReads: [TodayReadModel]{
+        return TodayReadModel.mockToadyReads
+    }
+}
+

@@ -6,9 +6,11 @@ public struct DoActivitiesView: View {
     @StateObject var viewModel: DoActivitiesViewModel = DoActivitiesViewModel()
     @State private var refreshId = UUID()
     private var tapOnSeeAll:(() -> Void)?
+    private var tapOnActivity:((_ data: DoActivitiesModel) -> Void)?
 
-    public init(tapOnSeeAll: (() -> Void)? = nil) {
+    public init(tapOnSeeAll: (() -> Void)? = nil , tapOnActivity: ((_ data: DoActivitiesModel) -> Void)? = nil) {
         self.tapOnSeeAll = tapOnSeeAll
+        self.tapOnActivity = tapOnActivity
     }
 
     public var body: some View {
@@ -58,6 +60,9 @@ public struct DoActivitiesView: View {
         VStack {
             ForEach(viewModel.activities.prefix(3)) { item in
                 ActivityCardView(ActivityCardViewModel(activity: item))
+                    .onTapGesture {
+                        tapOnActivity?(item)
+                    }
             }
         }
         .padding(.top, Spacing.spacing2x)
