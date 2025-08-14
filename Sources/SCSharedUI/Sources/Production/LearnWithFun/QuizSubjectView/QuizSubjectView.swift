@@ -10,12 +10,12 @@ public enum QuizSubjectLayout {
 public struct QuizSubjectView: View {
     @StateObject private var viewModel: QuizSubjectsViewModel = QuizSubjectsViewModel()
     private let columns = [
-        GridItem(.flexible(), spacing: Spacing.spacing4x),
-        GridItem(.flexible(), spacing: Spacing.spacing4x)
+        GridItem(.flexible(), spacing: Spacing.spacing1x),
+        GridItem(.flexible(), spacing: Spacing.spacing1x)
     ]
     private let classID: Int
     private let pageLayout: QuizSubjectLayout
-    private let onTapSubject: ((QuizSubjectModel) -> Void)?
+//    private let onTapSubject: ((QuizSubjectModel) -> Void)?
     private let onTapSeeAll:(([QuizSubjectModel]) -> Void)?
 
     public init(
@@ -26,7 +26,7 @@ public struct QuizSubjectView: View {
     ) {
         self.classID = classID
         self.pageLayout = pageLayout
-        self.onTapSubject = onTapSubject
+//        self.onTapSubject = onTapSubject
         self.onTapSeeAll = onTapSeeAll
     }
 
@@ -42,6 +42,13 @@ public struct QuizSubjectView: View {
                     }
             }
         }
+        .sheet(item: $viewModel.selectedSubject) { subject in
+            QuizChapterListView(
+                uniqueID: subject.uniqueID,
+                subjectName: subject.title) { index in
+                    
+                }
+        }
     }
 
     private var quizHomeView: some View {
@@ -52,9 +59,14 @@ public struct QuizSubjectView: View {
                     .shimmer(isLoading: true)
 
             case .loaded:
-                LearnWithFunHomeView(viewModel: viewModel) {
-                    onTapSeeAll?(viewModel.quizSubjects)
-                }
+                LearnWithFunHomeView(
+                    viewModel: viewModel,
+                    onTapSubject: { subject in
+                        viewModel.selectedSubject(subject)
+                    }, onTapSeeAll:  {
+                        onTapSeeAll?(viewModel.quizSubjects)
+                    }
+                )
 
             case .failed(_):
                 EmptyView()
@@ -67,10 +79,10 @@ public struct QuizSubjectView: View {
 
     private var quizDetailLayout: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: Spacing.spacing4x) {
+            LazyVGrid(columns: columns, spacing: Spacing.spacing1x) {
                 subjectView
             }
-            .padding(.horizontal, Spacing.spacing4x)
+            .padding(.horizontal, Spacing.spacing1x)
         }
     }
 
@@ -84,7 +96,7 @@ public struct QuizSubjectView: View {
             .frame(maxWidth: .infinity)
             .padding()
             .onTapGesture {
-                onTapSubject?(subject)
+                viewModel.selectedSubject(subject)
             }
         }
     }
