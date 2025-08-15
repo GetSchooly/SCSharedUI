@@ -21,13 +21,13 @@ public enum StudentProfileEndPoint {
         )
     }
 
-    static func getQuizQuestionsByQuizFor(boardId: String, subjectUniqueId: String, chapterId: String) -> APIEndpointFinal {
+    static func getQuizQuestionsByQuizFor(quizUniqueId: String) -> APIEndpointFinal {
         return DefaultEndpoint(
             path: "getQuizQuestionsByQuiz",
             method: .get,
             headers: headers,
             parameters: [
-                "quizUniqueId": "\(boardId.lowercased())-\(subjectUniqueId.lowercased())-\(chapterId)",
+                "quizUniqueId": "\(quizUniqueId)",
                 "limit": Int.random(in: 7...15)
             ]
         )

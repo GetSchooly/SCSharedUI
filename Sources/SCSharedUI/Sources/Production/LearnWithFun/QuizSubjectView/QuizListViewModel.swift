@@ -6,6 +6,7 @@ class QuizSubjectsViewModel: LoadableViewModel<[QuizSubjectModel]> {
     private var cancellables: Set<AnyCancellable> = []
     @Published private(set) var quizSubjects: [QuizSubjectModel] = []
     @Published var selectedSubject: QuizSubjectModel?
+    private(set) var selectedQuizId: String?
 
     override init() {
         super.init()
@@ -38,5 +39,10 @@ class QuizSubjectsViewModel: LoadableViewModel<[QuizSubjectModel]> {
 
     func selectedSubject(_ subject: QuizSubjectModel) {
         selectedSubject = subject
+    }
+
+    func selectedChapter(_ chapter: Chapter) {
+        guard let selectedSubject else { return }
+        selectedQuizId = "\(chapter.boardID.rawValue.lowercased())-\(selectedSubject.uniqueID)-\(chapter.chapterID)"
     }
 }

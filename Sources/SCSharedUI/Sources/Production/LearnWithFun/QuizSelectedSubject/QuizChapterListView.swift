@@ -6,12 +6,12 @@ struct QuizChapterListView: View {
     @StateObject private var viewModel: QuizChapterListViewModel = .init()
     private let uniqueID: String
     private let subjectName: String
-    private let onSelect: (Int) -> Void
+    private let onSelect: (Int, Chapter) -> Void
 
     init(
         uniqueID: String,
         subjectName: String,
-        onSelect: @escaping (Int) -> Void
+        onSelect: @escaping (Int, Chapter) -> Void
     ) {
         self.uniqueID = uniqueID
         self.subjectName = subjectName
@@ -41,7 +41,7 @@ struct QuizChapterListView: View {
         SDBottomList(
             title: subjectName,
             items: viewModel.chaptersTitle) { index, _ in
-                onSelect(index)
+                onSelect(index, viewModel.chapters[index])
             } onClose: {
                 dismiss()
             }

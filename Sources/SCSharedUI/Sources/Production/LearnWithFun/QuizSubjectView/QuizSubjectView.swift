@@ -9,6 +9,8 @@ public enum QuizSubjectLayout {
 
 public struct QuizSubjectView: View {
     @StateObject private var viewModel: QuizSubjectsViewModel = QuizSubjectsViewModel()
+    @State private var showQuizView: Bool = false
+    
     private let columns = [
         GridItem(.flexible(), spacing: Spacing.spacing1x),
         GridItem(.flexible(), spacing: Spacing.spacing1x)
@@ -45,9 +47,20 @@ public struct QuizSubjectView: View {
         .sheet(item: $viewModel.selectedSubject) { subject in
             QuizChapterListView(
                 uniqueID: subject.uniqueID,
-                subjectName: subject.title) { index in
-                    
+                subjectName: subject.title) { index, chapter in
+                    viewModel.selectedChapter(chapter)
+                    showQuizView.toggle()
                 }
+        }
+        .sheet(isPresented: $showQuizView) {
+            if let selectedQuizId = viewModel.selectedQuizId {
+                QuizView(
+                    quizName: viewModel.selectedSubject?.title ?? "" ,
+                    quizUniqueId: selectedQuizId
+                )
+            } else {
+                EmptyView()
+            }
         }
     }
 
