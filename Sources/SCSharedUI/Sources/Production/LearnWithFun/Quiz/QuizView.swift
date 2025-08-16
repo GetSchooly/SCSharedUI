@@ -5,6 +5,7 @@ import SCComponents
 struct QuizView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.mainWindowSize) var mainWindowSize
+    @Environment(\.navigationManager) var navigationManager
     @StateObject private var viewModel: QuizViewModel = .init()
     @State private var questionIndex = 0
     @State private var submitAnswer: Bool = false
@@ -113,6 +114,8 @@ struct QuizView: View {
                         questionIndex += 1
                         submitAnswer.toggle()
                     }
+                } else if questionIndex + 1 == viewModel.quizQuestions.count {
+                    navigationManager?.homeNavigationPath.append("YourScorePage")
                 }
             }
             .frame(maxWidth: .infinity)

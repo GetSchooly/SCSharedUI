@@ -62,6 +62,9 @@ public struct QuizSubjectView: View {
                     quizName: viewModel.selectedSubject?.title ?? "" ,
                     quizUniqueId: selectedQuizId
                 )
+            } else if value == "YourScorePage" {
+                // Push to score view
+                ScoreCardView(gained: 12, total: 15)
             }
         }
     }

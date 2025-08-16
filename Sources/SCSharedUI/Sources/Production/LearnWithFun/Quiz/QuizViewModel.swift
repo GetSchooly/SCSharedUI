@@ -42,4 +42,17 @@ class QuizViewModel: LoadableViewModel<[QuizModel]> {
         let answer = question.options[selectedAnswerIndex]
         return answer == question.answer
     }
+
+    var gainedScore: Int {
+        return quizQuestions.filter { model in
+            guard let selectedAnswerIndex = model.selectedAnswerIndex else {
+                return false
+            }
+            return selectedAnswerIndex == model.correctOption
+        }.count
+    }
+
+    var totalScore: Int {
+        return quizQuestions.count
+    }
 }
