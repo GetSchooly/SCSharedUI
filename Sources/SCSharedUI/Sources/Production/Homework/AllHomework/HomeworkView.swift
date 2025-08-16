@@ -37,12 +37,12 @@ public struct HomeworkView: View {
             contentView
         }
     }
-    
+
     private var contentView: some View {
         ZStack {
             content
         }
-        .padding(.top, Spacing.spacing5x)
+        .padding(.top, Spacing.spacing4x)
         .background(Color.white)
         .clipShape(
             .rect(

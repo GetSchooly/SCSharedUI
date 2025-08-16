@@ -21,6 +21,7 @@ struct QuizQuestionView: View {
         self.currentQuestionIndex = currentQuestionIndex
         self.totalNumberOfQuestions = totalNumberOfQuestions
         self.onAnswerSelected = onAnswerSelected
+        Font.loadMyFonts
     }
 
     var body: some View {
@@ -53,8 +54,8 @@ struct QuizQuestionView: View {
             // Question
             SDText(
                 question.question,
-                style: .size100(
-                    weight: .regular,
+                style: .size300(
+                    weight: .medium,
                     theme: .primary
                 )
             )
@@ -72,7 +73,7 @@ struct QuizQuestionView: View {
                         }) {
                             SDText(
                                 question.options[index],
-                                style:.size90(
+                                style:.size200(
                                     weight: .regular,
                                     theme: selectedAnswer == index ? .standard : .primary
                                 )
@@ -98,6 +99,29 @@ struct QuizQuestionView: View {
     }
 }
 
-//#Preview {
-//    QuizQuestionView()
-//}
+#Preview {
+    @State var selectedIndex: Int? = nil
+    
+    QuizQuestionView(
+        question: QuizModel(
+            id: 2,
+            quizUniqueID: "quizUniqueID",
+            question: "limit of sin(x)/x as x approaches 1?",
+            options: [
+                "0.5",
+                "0",
+                "1",
+                "None of them above"
+            ],
+            correctOption: 1,
+            answer: "1",
+            explanation: "lim(x→0) sin(x)/x = 1.",
+            questionType: .mcq,
+            difficulty: .easy,
+            imageURL: nil,
+            board: "CBSE"
+        ), selectedAnswer: $selectedIndex,
+        totalNumberOfQuestions: 20) { index in
+
+        }
+}

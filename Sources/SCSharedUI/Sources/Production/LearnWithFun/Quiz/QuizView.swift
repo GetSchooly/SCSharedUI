@@ -6,6 +6,7 @@ struct QuizView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: QuizViewModel = .init()
     @State private var questionIndex = 0
+    @State private var submitAnswer: Bool = false
     private let quizName: String
     private let quizUniqueId: String
 
@@ -43,61 +44,69 @@ struct QuizView: View {
     }
     
     private var chaptersBottomSheet: some View {
-        VStack {
-            let question = viewModel.quizQuestions[questionIndex]
-            QuizQuestionView(
-                question: question,
-                selectedAnswer: $viewModel.quizQuestions[questionIndex].selectedAnswerIndex,
-                currentQuestionIndex: questionIndex,
-                totalNumberOfQuestions: viewModel.quizQuestions.count) { index in
-                    viewModel.setSelectedAnswer(for: questionIndex, answerIndex: index)
-                }
-                .id(questionIndex)
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.7), value: questionIndex)
+        ZStack {
+            VStack {
+                let question = viewModel.quizQuestions[questionIndex]
+                QuizQuestionView(
+                    question: question,
+                    selectedAnswer: $viewModel.quizQuestions[questionIndex].selectedAnswerIndex,
+                    currentQuestionIndex: questionIndex,
+                    totalNumberOfQuestions: viewModel.quizQuestions.count) { index in
+                        viewModel.setSelectedAnswer(for: questionIndex, answerIndex: index)
+                    }
+                    .id(questionIndex)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.7), value: questionIndex)
 
-            // Bottom navigation
-            HStack {
                 Button(action: {
-                    withAnimation {
-                        if questionIndex > 0 {
-                            questionIndex -= 1
-                        }
-                    }
+                    //submit action
+                    submitAnswer.toggle()
                 }) {
-                    SDImage(.local(resource: Icons.ic_PreviousArrowWhite.value, iconSize: .medium))
-                        .frame(width: Sizing.sizing14x + Sizing.sizing2x, height: Sizing.sizing12x)
-                        .background(Capsule().fill(Color.royalBlue))
+                    SDText(
+                        "Check Answer",
+                        style: .size200(
+                            weight: .semiBold,
+                            theme: .standard,
+                            alignment: .center
+                        )
+                    )
+                    .frame(height: Sizing.sizing12x)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: Sizing.sizing3x)
+                            .fill(Color.royalBlue)
+                    )
                 }
+                .disabled(question.selectedAnswerIndex == nil)
+                .opacity(question.selectedAnswerIndex == nil ? 0.5 : 1)
+                .padding(.horizontal, Spacing.spacing6x)
+                .padding(.bottom, Spacing.spacing6x)
+            }
 
-                Spacer()
+            if submitAnswer {
+                resultView
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                        removal: .move(edge: .bottom).combined(with: .opacity)
+                    ))
+            }
+        }
+    }
 
-                if questionIndex < viewModel.quizQuestions.count - 1 {
-                    Button(action: {
-                        withAnimation {
-                            if questionIndex < viewModel.quizQuestions.count - 1 {
-                                questionIndex += 1
-                            }
-                        }
-                    }) {
-                        SDImage(.local(resource: Icons.ic_NextArrowWhite.value, iconSize: .medium))
-                            .frame(width: Sizing.sizing14x + Sizing.sizing2x, height: Sizing.sizing12x)
-                            .background(Capsule().fill(Color.royalBlue))
+    private var resultView: some View {
+        let question = viewModel.quizQuestions[questionIndex]
+        return ResultView(
+            result: viewModel.isAnswerCorrect(
+                for: question) ? .right : .wrong(question.explanation)
+        ) {
+            if questionIndex < viewModel.quizQuestions.count - 1 {
+                withAnimation {
+                    if questionIndex < viewModel.quizQuestions.count - 1 {
+                        questionIndex += 1
                     }
-                } else {
-                    Button(action: {
-                        //submit action
-
-                    }) {
-                        SDText("Submit", style: .size200(weight: .semiBold, theme: .standard, alignment: .center))
-                            .padding(.horizontal, Spacing.spacing4x)
-                            .frame(height: Sizing.sizing12x)
-                            .background(Capsule().fill(Color.royalBlue))
-                    }
+                    submitAnswer.toggle()
                 }
             }
-            .padding(.horizontal, Spacing.spacing6x)
-            .padding(.bottom, Spacing.spacing6x)
         }
     }
 }

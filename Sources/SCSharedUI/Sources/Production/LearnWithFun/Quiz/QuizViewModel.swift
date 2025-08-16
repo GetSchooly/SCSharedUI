@@ -34,4 +34,12 @@ class QuizViewModel: LoadableViewModel<[QuizModel]> {
     func setSelectedAnswer(for questionIndex: Int, answerIndex: Int) {
         quizQuestions[questionIndex].selectedAnswerIndex = answerIndex
     }
+
+    func isAnswerCorrect(for question: QuizModel) -> Bool {
+        guard let selectedAnswerIndex = question.selectedAnswerIndex else {
+            return false
+        }
+        let answer = question.options[selectedAnswerIndex]
+        return answer == question.answer
+    }
 }
