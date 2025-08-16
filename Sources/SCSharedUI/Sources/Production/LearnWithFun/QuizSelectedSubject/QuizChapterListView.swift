@@ -4,6 +4,7 @@ import SCComponents
 struct QuizChapterListView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: QuizChapterListViewModel = .init()
+    @State private var quizavigationPath = NavigationPath()
     private let uniqueID: String
     private let subjectName: String
     private let onSelect: (Int, Chapter) -> Void

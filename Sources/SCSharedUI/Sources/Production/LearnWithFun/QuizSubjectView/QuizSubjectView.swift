@@ -10,7 +10,7 @@ public enum QuizSubjectLayout {
 public struct QuizSubjectView: View {
     @StateObject private var viewModel: QuizSubjectsViewModel = QuizSubjectsViewModel()
     @State private var showQuizView: Bool = false
-    @State private var quizavigationPath = NavigationPath()
+    @Environment(\.navigationManager) private var navigationManager
 
     private let columns = [
         GridItem(.flexible(), spacing: Spacing.spacing1x),
@@ -34,36 +34,34 @@ public struct QuizSubjectView: View {
     }
 
     public var body: some View {
-        NavigationStack(path: $quizavigationPath) {
-            Group {
-                switch pageLayout {
-                case .home:
-                    quizHomeView
-                case .detail(let subjects):
-                    quizDetailLayout
-                        .onAppear {
-                            viewModel.setQuizSubjects(subjects)
-                        }
-                }
-            }
-            .sheet(item: $viewModel.selectedSubject) { subject in
-                QuizChapterListView(
-                    uniqueID: subject.uniqueID,
-                    subjectName: subject.title) { index, chapter in
-                        viewModel.selectedChapter(chapter)
-                        viewModel.selectedSubject = nil
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                            self.quizavigationPath.append("quizView")
-                        })
+        Group {
+            switch pageLayout {
+            case .home:
+                quizHomeView
+            case .detail(let subjects):
+                quizDetailLayout
+                    .onAppear {
+                        viewModel.setQuizSubjects(subjects)
                     }
             }
-            .navigationDestination(for: String.self) { value in
-                if value == "quizView", let selectedQuizId = viewModel.selectedQuizId {
-                    QuizView(
-                        quizName: viewModel.selectedSubject?.title ?? "" ,
-                        quizUniqueId: selectedQuizId
-                    )
+        }
+        .sheet(item: $viewModel.selectedSubject) { subject in
+            QuizChapterListView(
+                uniqueID: subject.uniqueID,
+                subjectName: subject.title) { index, chapter in
+                    viewModel.selectedChapter(chapter)
+                    viewModel.selectedSubject = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                        self.navigationManager?.homeNavigationPath.append("quizView")
+                    })
                 }
+        }
+        .navigationDestination(for: String.self) { value in
+            if value == "quizView", let selectedQuizId = viewModel.selectedQuizId {
+                QuizView(
+                    quizName: viewModel.selectedSubject?.title ?? "" ,
+                    quizUniqueId: selectedQuizId
+                )
             }
         }
     }
@@ -122,3 +120,4 @@ public struct QuizSubjectView: View {
 #Preview {
     QuizSubjectView(classID: 1)
 }
+
