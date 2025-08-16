@@ -4,9 +4,11 @@ import SCComponents
 
 struct QuizView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.mainWindowSize) var mainWindowSize
     @StateObject private var viewModel: QuizViewModel = .init()
     @State private var questionIndex = 0
     @State private var submitAnswer: Bool = false
+    @State private var resultHeight: CGFloat = 0
     private let quizName: String
     private let quizUniqueId: String
 
@@ -32,6 +34,7 @@ struct QuizView: View {
         .task {
             viewModel.fetchQuizQuestions(quizUniqueId: quizUniqueId)
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 
     private var quetionView: some View {
@@ -42,7 +45,7 @@ struct QuizView: View {
                 chaptersBottomSheet
             }
     }
-    
+
     private var chaptersBottomSheet: some View {
         ZStack {
             VStack {
@@ -54,9 +57,6 @@ struct QuizView: View {
                     totalNumberOfQuestions: viewModel.quizQuestions.count) { index in
                         viewModel.setSelectedAnswer(for: questionIndex, answerIndex: index)
                     }
-                    .id(questionIndex)
-                    .transition(.opacity)
-                    .animation(.easeInOut(duration: 0.7), value: questionIndex)
 
                 Button(action: {
                     //submit action
@@ -83,31 +83,42 @@ struct QuizView: View {
                 .padding(.bottom, Spacing.spacing6x)
             }
 
-            if submitAnswer {
-                resultView
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .bottom).combined(with: .opacity),
-                        removal: .move(edge: .bottom).combined(with: .opacity)
-                    ))
-            }
+            resultView
+                .frame(maxWidth: .infinity)
+                .offset(y: submitAnswer ? 0 : mainWindowSize.height + 20 )
+                .animation(.easeInOut, value: submitAnswer)
         }
+        .id(questionIndex)
+        .transition(
+            .asymmetric(
+                insertion: .move(edge: .trailing).combined(with: .opacity),
+                removal: .move(edge: .leading).combined(with: .opacity)
+            )
+        )
+        .animation(.easeInOut, value: questionIndex)
     }
 
     private var resultView: some View {
         let question = viewModel.quizQuestions[questionIndex]
-        return ResultView(
-            result: viewModel.isAnswerCorrect(
-                for: question) ? .right : .wrong(question.explanation)
-        ) {
-            if questionIndex < viewModel.quizQuestions.count - 1 {
-                withAnimation {
-                    if questionIndex < viewModel.quizQuestions.count - 1 {
+        return VStack {
+            Spacer()
+
+            ResultView(
+                result: viewModel.isAnswerCorrect(for: question)
+                    ? .right
+                    : .wrong(question.explanation)
+            ) {
+                if questionIndex < viewModel.quizQuestions.count - 1 {
+                    withAnimation {
                         questionIndex += 1
+                        submitAnswer.toggle()
                     }
-                    submitAnswer.toggle()
                 }
             }
+            .frame(maxWidth: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.appwhite.opacity(0.01).ignoresSafeArea())
     }
 }
 

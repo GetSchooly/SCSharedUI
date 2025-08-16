@@ -48,9 +48,9 @@ struct ResultView: View {
                     .padding(Spacing.spacing4x)
                     .padding(.bottom, Spacing.spacing12x)
                     .background(Color.green.opacity(0.1))
-                    .shadow(.defaultGrayElevation)
                 }
                 .background(Color.appwhite)
+                .shadow(.defaultGrayElevation)
             }
             .background(Color.clear)
 
@@ -72,24 +72,24 @@ struct ResultView: View {
                                 alignment: .center
                             )
                         )
-                        .onTapGesture {
-                            onNext()
-                        }
                         .padding(Spacing.spacing4x)
                         .frame(maxWidth: .infinity)
                         .background(Color.red)
                         .frame(height: Sizing.sizing12x)
                         .cornerRadius(Sizing.sizing3x)
                         .padding(.top, Spacing.spacing2x)
+                        .onTapGesture {
+                            onNext()
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .frame(alignment: .leading)
                     .padding(Spacing.spacing4x)
                     .padding(.bottom, Spacing.spacing10x)
                     .background(Color.red.opacity(0.1))
-                    .shadow(.defaultGrayElevation)
                 }
                 .background(Color.appwhite)
+                .shadow(.defaultGrayElevation)
             }
             .background(Color.clear)
         }
@@ -145,11 +145,13 @@ struct ResultView: View {
 
 #Preview {
     VStack(spacing: 20) {
-        ResultView(result: .right) {
-
-        }
+        
 
         ResultView(result: .wrong("This is the right answer.")) {
+
+        }
+    
+        ResultView(result: .right) {
 
         }
     }
