@@ -3,19 +3,18 @@ import SCComponents
 import SCTokens
 
 public struct TodayReadView: View {
-    
-    // variables/properties
-    
-    // your view model
-    @ObservedObject var viewModel: TodayReadViewModel = TodayReadViewModel()
+    @StateObject var viewModel: TodayReadViewModel = TodayReadViewModel()
     private let tapOnSeeAll:(() -> Void)
     private var tapOnTodayRead:((_ data: TodayReadModel) -> Void)?
-    
-    public init(tapOnSeeAll: @escaping (() -> Void), tapOnTodayRead: ((_ data: TodayReadModel) -> Void)? = nil) {
+
+    public init(
+        tapOnSeeAll: @escaping (() -> Void),
+        tapOnTodayRead: ((_ data: TodayReadModel) -> Void)? = nil
+    ) {
         self.tapOnSeeAll = tapOnSeeAll
         self.tapOnTodayRead = tapOnTodayRead
     }
-    
+
     public var body: some View {
         Group{
             switch viewModel.loadingState.viewLoadingState {
@@ -36,7 +35,7 @@ public struct TodayReadView: View {
             viewModel.fetchTodayReadList(limit: 10, offset: 0)
         }
     }
-    
+
     private var mainContentView: some View {
         VStack {
             titleAndFindMoreView
@@ -48,7 +47,6 @@ public struct TodayReadView: View {
         .background(Color.clear)
     }
 
-    
     @ViewBuilder
     private var titleAndFindMoreView: some View {
         HStack(alignment: .center) {
@@ -62,20 +60,21 @@ public struct TodayReadView: View {
         }
         .frame(height: Spacing.spacing5x)
     }
-
 }
 
 private struct BlogCardList: View {
     let todayReadData: [TodayReadModel]
     private var tapOnBlog:((_ data: TodayReadModel) -> Void)?
+
     init(todayReadData: [TodayReadModel], tapOnBlog: ((_: TodayReadModel) -> Void)? = nil) {
         self.todayReadData = todayReadData
         self.tapOnBlog = tapOnBlog
     }
+
     var body: some View {
         ScrollView(.horizontal) {
             HStack(spacing: Spacing.spacing4x) {
-                ForEach(todayReadData.prefix(5)) { item in
+                ForEach(todayReadData.prefix(5), id: \.self) { item in
                     BlogCardView(BlogCardViewModel(blog: item))
                         .frame(width: UIScreen.main.bounds.size.width - 80)
                         .onTapGesture {

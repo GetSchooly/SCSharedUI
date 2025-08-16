@@ -2,27 +2,47 @@ import SwiftUI
 import SCComponents
 import SCTokens
 
-public struct AllHomeworkView: View {
-    
-    // your view model
-    @ObservedObject var viewModel: AllHomeworkViewModel
-    
-    public init(viewModel: AllHomeworkViewModel) {
-        self.viewModel = viewModel
+public struct HomeworkView: View {
+    @StateObject var viewModel: HomeworkViewModel = .init()
+    private let studentId: String
+    private let selectedDate: String
+
+    public init(studentId: String) {
+        self.studentId = studentId
+        self.selectedDate = "2025-05-31"
     }
-    
+
     public var body: some View {
+        Group {
+            switch viewModel.loadingState.viewLoadingState {
+            case .idle, .loading:
+                mainContentView
+                    .shimmer(isLoading: true)
+
+            case .loaded:
+                mainContentView
+
+            case .failed(_):
+                EmptyView()
+            }
+        }
+        .task {
+            viewModel.fetchStudentHomeworks(studentId: studentId, selectedDate: selectedDate)
+        }
+    }
+
+    private var mainContentView: some View {
         VStack {
             weekCalendarView
             contentView
         }
     }
-    
+
     private var contentView: some View {
         ZStack {
             content
         }
-        .padding(.top, Spacing.spacing5x)
+        .padding(.top, Spacing.spacing4x)
         .background(Color.white)
         .clipShape(
             .rect(
@@ -34,7 +54,7 @@ public struct AllHomeworkView: View {
         .ignoresSafeArea(edges: .bottom)
         .shadow(.defaultGrayElevation)
     }
-    
+
     private var content: some View {
         VStack(spacing: Spacing.spacing2x) {
             HStack {
@@ -42,12 +62,21 @@ public struct AllHomeworkView: View {
                 Spacer()
             }
             .padding(.top, Spacing.spacing2x)
-            .padding(.horizontal, Spacing.spacing5x)
-            
-            pendingView
+            .padding(.horizontal, Spacing.spacing4x)
+
+            ScrollView(.vertical) {
+                VStack(spacing: Spacing.spacing5x) {
+                    taskListView(title: "Pending", tasks: viewModel.pendingHomeworks)
+
+                    taskListView(title: "Completed", tasks: viewModel.completedHomeworks)
+                }
+                .padding(.top, Spacing.spacing2x)
+
+                Spacer()
+            }
         }
     }
-    
+
     private var selectedDay: some View {
         VStack(alignment: .leading, spacing: Spacing.spacing2x) {
             SDText(viewModel.selectedDateMonthYear(),
@@ -66,28 +95,27 @@ public struct AllHomeworkView: View {
             )
         }
     }
-    
+
     @ViewBuilder
     private var weekCalendarView: some View {
         CalendarView(viewModel: viewModel.calendarViewModel)
     }
-    
-    private var pendingView: some View {
-        List {
-            ForEach(viewModel.data) { section in
-                Section(header: sectionTitleView(section.title)) {
-                    ForEach(section.items, id: \.self) { item in
-                        HomeworkCard(viewModel: UpcomingCardViewModel(isShadow: false))
+
+    private func taskListView(title: String, tasks: [StudentTask]) -> some View {
+        VStack(spacing: Spacing.spacing4x) {
+            sectionTitleView("\(title)(\(tasks.count))")
+                .padding(.horizontal, Spacing.spacing4x)
+
+            ForEach(tasks) { item in
+                HomeworkCard(studentTask: item)
+                    .onTapGesture {
+                        // TODO: - show homework detail
                     }
-                }
-                .listRowSeparator(.hidden)
-                .listSectionSeparator(.hidden)
             }
+            .padding(.horizontal, Spacing.spacing5x)
         }
-        .listStyle(.plain)
-        .scrollIndicators(.never)
     }
-    
+
     private func sectionTitleView(_ title: String) -> some View {
         HStack {
             SDText(title,
@@ -106,5 +134,5 @@ public struct AllHomeworkView: View {
 }
 
 #Preview {
-    AllHomeworkView(viewModel: AllHomeworkViewModel(data: [AllHomeworkModel(title: "ABC", items: ["as", "bs"])]))
+    HomeworkView(studentId: "141")
 }

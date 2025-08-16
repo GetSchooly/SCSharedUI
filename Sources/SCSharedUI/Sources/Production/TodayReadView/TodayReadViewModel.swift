@@ -2,17 +2,16 @@ import Foundation
 import Combine
 
 class TodayReadViewModel: LoadableViewModel<[TodayReadModel]> {
-    
     private lazy var todayReadService: TodayReadViewService = TodayReadViewService()
     private var cancellables = Set<AnyCancellable>()
     @Published private(set) var todayReads: [TodayReadModel] = []
-    
+
    override init() {
        super.init()
         self.todayReads = mockTodayReads
        observeTodayReads()
     }
-    
+
     private func observeTodayReads() {
         $loadingState
             .receive(on: DispatchQueue.main)
@@ -27,7 +26,7 @@ class TodayReadViewModel: LoadableViewModel<[TodayReadModel]> {
             }
             .store(in: &cancellables)
     }
-    
+
     func fetchTodayReadList(limit: Int, offset: Int) {
         let publicer = todayReadService.fetchTodayReadList(limit: limit, offset: offset)
         load(publisher: publicer)

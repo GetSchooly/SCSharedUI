@@ -3,18 +3,12 @@ import SCComponents
 import SCTokens
 
 public struct UpcomingCardView: View {
-    
-    // variables/properties
-    
-    // your view model
     @ObservedObject var viewModel: UpcomingCardViewModel = UpcomingCardViewModel(isShadow: true)
-    
+
     public init() {
-        setupUI()
-        initViewModel()
-        Font.loadMyFonts
+
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading) {
             SDText("Upcoming", style: .size300(weight: .bold, theme: .standard))
@@ -27,15 +21,6 @@ public struct UpcomingCardView: View {
         .padding(.top, Sizing.sizing2x)
         .padding(.bottom, Sizing.sizing4x)
         .background(Color.red.opacity(0.4))
-    }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
     }
 }
 

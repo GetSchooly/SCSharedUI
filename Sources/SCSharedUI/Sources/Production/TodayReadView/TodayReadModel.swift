@@ -25,7 +25,6 @@ class TodayReadViewService: TodayReadServiceProtocol {
 }
 
 // MARK: - MOCK
-
 public extension TodayReadModel{
     static let mockTodayRead = TodayReadModel(
         id: 1,
@@ -38,5 +37,46 @@ public extension TodayReadModel{
         numberOfFoundUseful: 100
     )
     
-    static let mockToadyReads: [TodayReadModel] = Array(repeating: .mockTodayRead, count: 5)
+    static let mockToadyReads: [TodayReadModel] = [
+        .init(
+            id: 1,
+            title: "Mock Today Read Title",
+            posterImage: "https://picsum.photos/id/1018/200/300",
+            postedAt: "202020",
+            readingTime: "10 min",
+            description: "Mock Today Read Description",
+            numberOfViews: 100,
+            numberOfFoundUseful: 100
+        ),
+        .init(
+            id: 2,
+            title: "Mock Today Read Title",
+            posterImage: "https://picsum.photos/id/1018/200/300",
+            postedAt: "202020",
+            readingTime: "10 min",
+            description: "Mock Today Read Description",
+            numberOfViews: 100,
+            numberOfFoundUseful: 100
+        ),
+        .init(
+            id: 3,
+            title: "Mock Today Read Title",
+            posterImage: "https://picsum.photos/id/1018/200/300",
+            postedAt: "202020",
+            readingTime: "10 min",
+            description: "Mock Today Read Description",
+            numberOfViews: 100,
+            numberOfFoundUseful: 100
+        ),
+        .init(
+            id: 4,
+            title: "Mock Today Read Title",
+            posterImage: "https://picsum.photos/id/1018/200/300",
+            postedAt: "202020",
+            readingTime: "10 min",
+            description: "Mock Today Read Description",
+            numberOfViews: 100,
+            numberOfFoundUseful: 100
+        )
+    ]
 }

@@ -9,6 +9,9 @@ public enum QuizSubjectLayout {
 
 public struct QuizSubjectView: View {
     @StateObject private var viewModel: QuizSubjectsViewModel = QuizSubjectsViewModel()
+    @State private var showQuizView: Bool = false
+    @Environment(\.navigationManager) private var navigationManager
+
     private let columns = [
         GridItem(.flexible(), spacing: Spacing.spacing1x),
         GridItem(.flexible(), spacing: Spacing.spacing1x)
@@ -45,9 +48,24 @@ public struct QuizSubjectView: View {
         .sheet(item: $viewModel.selectedSubject) { subject in
             QuizChapterListView(
                 uniqueID: subject.uniqueID,
-                subjectName: subject.title) { index in
-                    
+                subjectName: subject.title) { index, chapter in
+                    viewModel.selectedChapter(chapter)
+                    viewModel.selectedSubject = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                        self.navigationManager?.homeNavigationPath.append("quizView")
+                    })
                 }
+        }
+        .navigationDestination(for: String.self) { value in
+            if value == "quizView", let selectedQuizId = viewModel.selectedQuizId {
+                QuizView(
+                    quizName: viewModel.selectedSubject?.title ?? "" ,
+                    quizUniqueId: selectedQuizId
+                )
+            } else if value == "YourScorePage" {
+                // Push to score view
+                ScoreCardView(gained: 12, total: 15)
+            }
         }
     }
 
@@ -105,3 +123,4 @@ public struct QuizSubjectView: View {
 #Preview {
     QuizSubjectView(classID: 1)
 }
+
