@@ -3,29 +3,29 @@ import SCComponents
 import SCTokens
 
 public struct ActivityCardView: View {
-    
-    // variables/properties
-    
-    // your view model
     @ObservedObject var viewModel: ActivityCardViewModel
-    
+ 
     public init(_ viewModel: ActivityCardViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
             cardView
+                .padding(.top, Spacing.spacing3x)
+                .padding(.bottom, Spacing.spacing2x)
+
             RoundedRectangle(cornerRadius: 1)
                 .fill(Color.appBackground)
                 .frame(height: 1)
         }
-        .background(Color.white)
+        .background(Color.appwhite)
     }
-    
+
     private var cardView: some View {
         HStack {
             titleAndSubTitleView
+                .layoutPriority(1)
             Spacer()
             SDImage(
                 .remote(
@@ -37,10 +37,8 @@ public struct ActivityCardView: View {
             .clipped()
         }
         .padding(.horizontal, Spacing.spacing4x)
-        .padding(.top, Spacing.spacing2x)
-        .padding(.bottom, Spacing.spacing2x)
     }
-    
+
     private var titleAndSubTitleView: some View {
         VStack(alignment: .leading, spacing: Spacing.spacing1x) {
             SDText(viewModel.title, style: .size90(weight: .semiBold, theme: .darkGray))

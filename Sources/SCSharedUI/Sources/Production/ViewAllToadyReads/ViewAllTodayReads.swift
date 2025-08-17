@@ -1,10 +1,8 @@
-
 import SwiftUI
 import SCTokens
 import SCComponents
 
 public struct ViewAllTodayReads: View {
-
     private var tapOnTodayRead:((_ data: TodayReadModel) -> Void)?
     @StateObject var viewModel: AllTodayReadsViewModel = AllTodayReadsViewModel()
 
@@ -32,17 +30,20 @@ public struct ViewAllTodayReads: View {
             viewModel.fetchTodayReadList(limit: 10, offset: 0)
         }
     }
-    
+
     private var readsList: some View {
         VStack {
-            List(viewModel.todayReads) { item in
-                BlogCardView(BlogCardViewModel(blog: item))
-                    .listRowSeparator(.hidden)
-                    .onTapGesture {
-                        tapOnTodayRead?(item)
-                    }
+            ScrollView(.vertical) {
+                ForEach(viewModel.todayReads) { item in
+                    BlogCardView(BlogCardViewModel(blog: item))
+                        .onTapGesture {
+                            tapOnTodayRead?(item)
+                        }
+                        .padding(.horizontal, Spacing.spacing4x)
+                        .padding(.bottom, Spacing.spacing2x)
+                }
             }
-            .listStyle(.plain)
+            .scrollIndicators(.hidden)
         }
     }
 }
