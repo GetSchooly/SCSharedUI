@@ -5,6 +5,7 @@ class QuizViewModel: LoadableViewModel<[QuizModel]> {
     private lazy var quizService = QuizService()
     private lazy var cancellables: Set<AnyCancellable> = []
     @Published var quizQuestions: [QuizModel] = []
+    var timeTaken: TimeInterval = 0
 
     override init() {
         super.init()
@@ -54,5 +55,22 @@ class QuizViewModel: LoadableViewModel<[QuizModel]> {
 
     var totalScore: Int {
         return quizQuestions.count
+    }
+}
+
+extension QuizViewModel {
+    func startTimer() {
+        Timer
+            .publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink(receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                self.timeTaken += 1
+            })
+            .store(in: &cancellables)
+    }
+
+    func stopTimer() {
+        cancellables.removeAll()
     }
 }

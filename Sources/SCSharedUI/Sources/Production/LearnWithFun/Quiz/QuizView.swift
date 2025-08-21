@@ -10,12 +10,25 @@ struct QuizView: View {
     @State private var questionIndex = 0
     @State private var submitAnswer: Bool = false
     @State private var resultHeight: CGFloat = 0
+
     private let quizName: String
     private let quizUniqueId: String
+    @Binding private var gainedScore: Int
+    @Binding private var totalScore: Int
+    @Binding private var timeTaken: TimeInterval
 
-    init(quizName: String, quizUniqueId: String) {
+    init(
+        quizName: String,
+        quizUniqueId: String,
+        gainedScore: Binding<Int>,
+        totalScore: Binding<Int>,
+        timeTaken: Binding<TimeInterval>
+    ) {
         self.quizName = quizName
         self.quizUniqueId = quizUniqueId
+        self._gainedScore = gainedScore
+        self._totalScore = totalScore
+        self._timeTaken = timeTaken
     }
 
     var body: some View {
@@ -44,6 +57,9 @@ struct QuizView: View {
                 dismiss()
             } content: {
                 chaptersBottomSheet
+                    .onAppear() {
+                        viewModel.startTimer()
+                    }
             }
     }
 
@@ -115,6 +131,11 @@ struct QuizView: View {
                         submitAnswer.toggle()
                     }
                 } else if questionIndex + 1 == viewModel.quizQuestions.count {
+                    viewModel.stopTimer()
+                    gainedScore = viewModel.gainedScore
+                    totalScore = viewModel.totalScore
+                    timeTaken = viewModel.timeTaken
+
                     navigationManager?.homeNavigationPath.append("YourScorePage")
                 }
             }
@@ -126,5 +147,5 @@ struct QuizView: View {
 }
 
 #Preview {
-    QuizView(quizName: "Relational Databases", quizUniqueId: "12")
+    QuizView(quizName: "Relational Databases", quizUniqueId: "12", gainedScore: .constant(12), totalScore: .constant(15), timeTaken: .constant(45))
 }

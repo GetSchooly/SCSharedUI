@@ -5,14 +5,15 @@ import SCTokens
 struct ScoreCardView: View {
     private let gained: Int
     private let total: Int
+    private let timeTaken: TimeInterval
     @Environment(\.navigationManager) var navigationManager
     @StateObject private var viewModel: ScoreCardViewModel
 
-    init(gained: Int, total: Int) {
+    init(gained: Int, total: Int, timeTaken: TimeInterval) {
         self.total = total
         self.gained = gained
+        self.timeTaken = timeTaken
         _viewModel = StateObject(wrappedValue: .init(gained: gained, total: total))
-        Font.loadMyFonts
     }
 
     var body: some View {
@@ -134,6 +135,6 @@ struct ScoreCardView: View {
 }
 
 #Preview {
-    ScoreCardView(gained: 12, total: 15)
+    ScoreCardView(gained: 12, total: 15, timeTaken: 45)
         .padding()
 }

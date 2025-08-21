@@ -60,11 +60,18 @@ public struct QuizSubjectView: View {
             if value == "quizView", let selectedQuizId = viewModel.selectedQuizId {
                 QuizView(
                     quizName: viewModel.selectedSubject?.title ?? "" ,
-                    quizUniqueId: selectedQuizId
+                    quizUniqueId: selectedQuizId,
+                    gainedScore: $viewModel.gaindeScore,
+                    totalScore: $viewModel.totalScore,
+                    timeTaken: $viewModel.timeTaken
                 )
             } else if value == "YourScorePage" {
                 // Push to score view
-                ScoreCardView(gained: 12, total: 15)
+                ScoreCardView(
+                    gained: viewModel.gaindeScore,
+                    total: viewModel.totalScore,
+                    timeTaken: viewModel.timeTaken
+                )
             }
         }
     }

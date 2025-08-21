@@ -7,6 +7,9 @@ class QuizSubjectsViewModel: LoadableViewModel<[QuizSubjectModel]> {
     @Published private(set) var quizSubjects: [QuizSubjectModel] = []
     @Published var selectedSubject: QuizSubjectModel?
     private(set) var selectedQuizId: String?
+    @Published var gaindeScore: Int = 0
+    @Published var totalScore: Int = 0
+    @Published var timeTaken: TimeInterval = 0
 
     override init() {
         super.init()

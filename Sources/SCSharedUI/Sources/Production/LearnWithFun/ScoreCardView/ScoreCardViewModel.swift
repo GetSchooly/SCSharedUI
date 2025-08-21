@@ -53,4 +53,15 @@ class ScoreCardViewModel: ObservableObject {
         let percentage = (Double(gained) / Double(total)) * 100
         return Int(percentage.rounded())
     }
+
+    func getTimeTakenInMinutes(_ value: TimeInterval) -> String {
+        let secs = Int(value)
+        if secs < 60 {
+            return "\(Int(secs)) secs"
+        }
+
+        let mins = secs / 60
+        let seconds = secs % 60
+        return String(format: "%02d:%02d", mins, seconds)
+    }
 }
