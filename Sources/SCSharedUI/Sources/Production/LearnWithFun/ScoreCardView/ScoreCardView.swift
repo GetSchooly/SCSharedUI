@@ -22,16 +22,32 @@ struct ScoreCardView: View {
     }
 
     var allComponent: some View {
-        VStack(){
-            Group{
-                scoreView
-                welcomeText
-            }
-            Spacer()
+        VStack {
+            mainScorCard
             actionbutton
         }
     }
 
+    private var mainScorCard: some View {
+        VStack {
+            scoreView
+            welcomeText
+
+            Spacer()
+
+            scoreCard
+                .padding(.bottom, Spacing.spacing12x)
+        }
+        .background(content: {
+            RoundedRectangle(cornerRadius: Sizing.sizing5x)
+                .fill(Color.appwhite)
+        })
+        .shareSheet(
+            items: [viewModel.scoreCardImage ?? UIImage()],
+            isPresented: $viewModel.isShareSheetPresented
+        )
+    }
+    
     var scoreView: some View {
         ZStack {
             Circle()
@@ -66,7 +82,6 @@ struct ScoreCardView: View {
         }
         .frame(width: 250, height: 250)
         .padding(.top, Spacing.spacing10x)
-        
     }
 
     private var welcomeText: some View {
@@ -84,35 +99,48 @@ struct ScoreCardView: View {
                 viewModel.feedback?.message ?? "",
                 style: .size200(
                     weight: .medium,
-                    theme: .royalBlue,
+                    theme: .darkGray,
                     alignment: .center
                 )
             )
         }
-        .padding(Spacing.spacing4x)
+        .padding(Spacing.spacing5x)
+    }
+
+    private var scoreCard: some View {
+        Group {
+            HStack(spacing: Spacing.spacing4x) {
+                SDScoreCard(
+                    title: "Total Points",
+                    subTitle: "\(gained)",
+                    foregroundColor: .standard,
+                    backgroundColor: .bright
+                )
+ 
+                SDScoreCard(
+                    title: "Score",
+                    subTitle: "\(viewModel.scorePercentage(gained: gained, total: total))",
+                    foregroundColor: .standard,
+                    backgroundColor: .royalBlue
+                )
+
+                SDScoreCard(
+                    title: "Timing",
+                    subTitle: "1:45",
+                    foregroundColor: .standard,
+                    backgroundColor: .positive
+                )
+            }
+        }
+        .frame(height: Sizing.sizing5x * Sizing.sizing1x)
+        .padding(.horizontal, Spacing.spacing5x)
     }
 
     private var actionbutton: some View {
         Group {
-            VStack(spacing: Spacing.spacing5x){
+            HStack(spacing: Spacing.spacing4x){
                 SDButton(
-                    "Share",
-                    buttonType:
-                            .primaryButton(
-                                .size200(
-                                    weight: .medium,
-                                    theme: .standard,
-                                    alignment: .center
-                                )
-                            ),
-                    maxSize: true
-                ) {
-                    
-                }
-                .frame(height: Sizing.sizing12x)
-
-                SDButton(
-                    "Back to home",
+                    "Collect Points",
                     buttonType:
                             .primaryButton(
                                 .size200(
@@ -126,10 +154,27 @@ struct ScoreCardView: View {
                     navigationManager?.homeNavigationPath.popToRoot()
                 }
                 .frame(height: Sizing.sizing12x)
+
+                SDButton(
+                    "Share",
+                    buttonType:
+                            .plain(
+                                .size200(
+                                    weight: .medium,
+                                    theme: .standard,
+                                    alignment: .center
+                                )
+                            ),
+                    maxSize: true
+                ) {
+                    viewModel.scoreCardImage = mainScorCard.snapshot()
+                    viewModel.isShareSheetPresented.toggle()
+                }
+                .frame(width: Sizing.sizing2x * Sizing.sizing2xHalf)
             }
         }
         .frame(height: Sizing.sizing12x)
-        .padding(.bottom, Spacing.spacing12x * 2)
+        .padding(.bottom, Spacing.spacing10x * 2)
         .padding(.horizontal, Spacing.spacing6x)
     }
 }

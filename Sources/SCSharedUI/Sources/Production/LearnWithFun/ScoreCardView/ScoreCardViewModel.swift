@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 struct ScoreFeedback {
     let title: String
@@ -7,6 +8,8 @@ struct ScoreFeedback {
 
 class ScoreCardViewModel: ObservableObject {
     @Published private(set) var feedback: ScoreFeedback?
+    @Published var scoreCardImage: UIImage?
+    @Published var isShareSheetPresented: Bool = false
 
     init(gained: Int, total: Int) {
         let percent = scorePercentage(gained: gained, total: total)
@@ -48,7 +51,7 @@ class ScoreCardViewModel: ObservableObject {
         }
     }
 
-    private func scorePercentage(gained: Int, total: Int) -> Int {
+    func scorePercentage(gained: Int, total: Int) -> Int {
         guard total > 0 else { return 0 }
         let percentage = (Double(gained) / Double(total)) * 100
         return Int(percentage.rounded())
