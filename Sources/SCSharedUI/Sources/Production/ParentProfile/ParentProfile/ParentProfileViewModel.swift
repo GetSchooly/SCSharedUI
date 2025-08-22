@@ -3,11 +3,9 @@ import Combine
 import SCTokens
 
 class ParentProfileViewModel: LoadableViewModel<ParentProfileModel> {
-
     private lazy var parentProfileService: ParentProfileService = ParentProfileService()
     private var cancellables: Set<AnyCancellable> = []
-
-    private(set) var profileModel: ParentProfileModel?
+    @Published private(set) var profileModel: ParentProfileModel?
 
     var tabSettingsItems: [ParentProfileOptionModel] = [
         ParentProfileOptionModel(title: "Subscription", image: Icons.ic_Subscribe),
@@ -19,13 +17,11 @@ class ParentProfileViewModel: LoadableViewModel<ParentProfileModel> {
         ParentProfileOptionModel(title: "Logout", image: Icons.ic_Logout)
     ]
 
-    // MARK:- Initialize
     override init() {
         super.init()
         observeParentProfile()
     }
 
-    // MARK: - Fetching functions
    private func observeParentProfile() {
         $loadingState
             .receive(on: DispatchQueue.main)

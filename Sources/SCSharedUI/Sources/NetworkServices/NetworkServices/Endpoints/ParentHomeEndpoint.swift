@@ -5,7 +5,7 @@ import SCTokens
 public enum ParentApiEndPoint {
     static func parentProfile() -> APIEndpointFinal {
         return DefaultEndpoint(
-            path: "viewEditParentLoginApp",
+            path: "viewEditLoginApp",
             method: .get,
             headers: headers
         )
