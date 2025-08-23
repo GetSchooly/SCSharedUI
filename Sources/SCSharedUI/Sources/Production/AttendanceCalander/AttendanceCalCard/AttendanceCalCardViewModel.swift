@@ -6,14 +6,16 @@ enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
     var id: Self {
         return self
     }
-    
+
     case present
     case absent
     case late
     case notMarked
     case holidays
     case none
-    
+    case upcoming
+    case sunday
+
     var color: Color {
         switch self {
         case .present:
@@ -26,21 +28,30 @@ enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
             return .darkGray
         case .holidays:
             return .blue
+        case .upcoming:
+            return .lightGray
         case .none:
             return .clear
+        case .sunday:
+            return .yellow
         }
     }
-    
+
     var text: String {
         if self == .notMarked {
             return "Not Marked"
         }
         return self.rawValue.capitalized
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = (try? container.decode(String.self)) ?? ""
+        self = AttendanceStatus(rawValue: raw) ?? .none
+    }
 }
 
 class AttendanceCalCardViewModel: ObservableObject {
-    
     @Published private(set) var header: AttendanceCalCardHeader?
     @Published private(set) var item: AttendanceCalCardItem?
 
@@ -49,12 +60,12 @@ class AttendanceCalCardViewModel: ObservableObject {
         self.header = header
         self.item = item
     }
-    
+
     // MARK: - Fetching functions
     func fetchData() {
         // Do something
     }
-    
+
     @ViewBuilder
     var itemView1: some View {
         if let header = header {
@@ -64,7 +75,7 @@ class AttendanceCalCardViewModel: ObservableObject {
         }
         EmptyView()
     }
-    
+
     @ViewBuilder
     var itemView2: some View {
         if let header = header {
@@ -74,7 +85,7 @@ class AttendanceCalCardViewModel: ObservableObject {
         }
         EmptyView()
     }
-    
+
     @ViewBuilder
     var itemView3: some View {
         if let header = header {

@@ -44,6 +44,19 @@ public enum StudentProfileEndPoint {
             ]
         )
     }
+
+    static func getStudentAttandance(studentId: Int, month: Int, year: Int) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getStudentAttandance/",
+            method: .get,
+            headers: headers,
+            parameters: [
+                "studentId": studentId,
+                "monthAction": month,
+                "yearAction": year
+            ]
+        )
+    }
 }
 
 fileprivate var headers: [String: String]? {

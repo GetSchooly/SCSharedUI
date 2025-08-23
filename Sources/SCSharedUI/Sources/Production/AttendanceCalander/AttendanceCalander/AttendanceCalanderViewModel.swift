@@ -1,105 +1,172 @@
+import Combine
 import Foundation
 import SCComponents
 import SwiftUICore
 
-public class AttendanceCalanderViewModel: ObservableObject {
-    
-    var currentAssessmentYear: String {
-        let currentYear = Calendar.current.component(.year, from: Date())
-        return "\(currentYear)/\(currentYear + 1)"
-    }
-    @Published var selectedMonth: SDPickerModel?
+class AttendanceCalanderViewModel: LoadableViewModel<AttendanceCalanderModel> {
+    @Published var selectedMonth: SDPickerModel = .init(id: 1, year: 2025, title: "")
     private(set) var months: [SDPickerModel] = []
     private(set) var attendanceStatus: [AttendanceStatus] = []
     @Published private(set) var calendarData: [CalendarDayModel] = []
-    
-    // MARK:- Initialize
-    public init() {
-        // Do something
-        setupAttendanceStatus()
+    @Published private(set) var studentAttendances: [StudentAttendance] = []
+    private lazy var attendanceActivities: AttendanceCalanderService = .init()
+    private var cancellables = Set<AnyCancellable>()
+
+    override init() {
+        super.init()
+        studentAttendances = AttendanceCalanderModel.mockAttendance.studentAttendance
         setupCurrentMonthCalendarData()
         setAllMonths()
-        selectedMonth = months.filter { $0.id == getCurrentMonth }.first
-    }
-    
-    // MARK: - Fetching functions
-    func fetchData() {
-        // Do something
-    }
-    
-    private func setupAttendanceStatus() {
         attendanceStatus = AttendanceStatus.allCases
+        selectedMonth = months.filter { $0.id == getCurrentMonth }.first ?? months[0]
+        observeAttendance()
     }
-    
+
+    private func observeAttendance() {
+        $loadingState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                switch state {
+                case .loaded(let model):
+                    self.studentAttendances = model.studentAttendance
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    func fetchAttendance(studentId: Int) {
+        let publisher = attendanceActivities.fetchStudentAttendance(
+            studentId: studentId,
+            month: selectedMonth.id,
+            year: selectedMonth.year
+        )
+        load(publisher: publisher)
+    }
+
+    var currentAssessmentYear: String {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return "\(currentYear)/\(nextYear)"
+    }
+}
+
+extension AttendanceCalanderViewModel {
+    private var getCurrentMonth: Int {
+        return Calendar.current.component(.month, from: Date())
+    }
+
+    private var currentYear: Int {
+        return Calendar.current.component(.year, from: Date())
+    }
+
+    private var nextYear: Int {
+        return Calendar.current.component(.year, from: Date()) + 1
+    }
+
     private func setupCurrentMonthCalendarData() {
         calendarData.removeAll()
-        
+
         let components = Calendar.current.dateComponents([.month, .year], from: Date())
         guard let month = components.month,
         let year = components.year else { return }
         getDaysWithMonth(month, year: year)
     }
-    
+
     private func getDaysWithMonth(_ month: Int, year: Int) {
         guard let allDays = getAllDaysOfMonth(month, year: year) else { return }
         for date in 1...allDays {
             let weekdayName = getWeekdayName(date: date, month: month, year: year) ?? "-"
             calendarData.append(
-                CalendarDayModel(day: weekdayName,
-                                 date: String("\(date)./\(month)./\(year)"),
-                                 status: getAttendanceStatus(weekdayName))
+                CalendarDayModel(
+                    day: weekdayName,
+                    date: String("\(date).\(month).\(year)"),
+                    status: getAttendanceStatus(
+                        weekdayName: weekdayName,
+                        day: date,
+                        month: month,
+                        year: year
+                    )
+                )
             )
         }
     }
-    
-    private func getAttendanceStatus(_ day: String) -> AttendanceStatus {
-        if day.lowercased() == "sunday" {
-            return .none
+
+    private func getAttendanceStatus(
+        weekdayName: String,
+        day: Int,
+        month: Int,
+        year: Int
+    ) -> AttendanceStatus {
+        if weekdayName.lowercased() == "sunday" {
+            return .sunday
         }
-        return .present
+
+        let dateString = "\(year)-/\(month)-/\(day)"
+        if let studentAttendance = studentAttendances.first(where: { model in
+            model.markAttendance == dateString
+        }) {
+            return studentAttendance.isPresent
+        }
+        return .none
     }
-    
+
     private func setAllMonths() {
-       let allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        let allMonths = [
+            "January - \(nextYear)",
+            "February - \(nextYear)",
+            "March - \(nextYear)",
+            "April - \(nextYear)",
+            "May - \(currentYear)",
+            "June - \(currentYear)",
+            "July - \(currentYear)",
+            "August - \(currentYear)",
+            "September - \(currentYear)",
+            "October - \(currentYear)",
+            "November - \(currentYear)",
+            "December - \(currentYear)"
+        ]
         allMonths.forEach { month in
             let index = allMonths.firstIndex(of: month) ?? 0
-            months.append(SDPickerModel(id: index + 1, title: month))
+            months.append(
+                SDPickerModel(
+                    id: index + 1,
+                    year: [1, 2, 3, 4].contains(index + 1) ? nextYear : currentYear,
+                    title: month
+                )
+            )
         }
     }
-    
-    private var getCurrentMonth: Int {
-        return Calendar.current.component(.month, from: Date())
-    }
-    
+
     private func getWeekdayName(date: Int, month: Int, year: Int) -> String? {
         let calendar = Calendar.current
-        
+
         var dateComponents = DateComponents()
         dateComponents.day = date
         dateComponents.month = month
         dateComponents.year = year
-        
+
         guard let date = calendar.date(from: dateComponents) else { return nil }
         let weekdayNumber = calendar.component(.weekday, from: date)
-        
+
         let formatter = DateFormatter()
         formatter.locale = Locale.current
         let weekdayName = formatter.weekdaySymbols[weekdayNumber - 1]
         return weekdayName
     }
-    
+
     private func getAllDaysOfMonth(_ month: Int, year: Int) -> Int? {
         let calendar = Calendar.current
-        
         let startDateComponents = DateComponents(year: year, month: month, day: 1)
-        
+
         var endDateComponents = DateComponents()
         endDateComponents.day = 1
         endDateComponents.month = month == 12 ? 1 : month + 1
         endDateComponents.year = month == 12 ? year + 1 : year
-        
+
         guard let startDate = calendar.date(from: startDateComponents), let endDate = calendar.date(from: endDateComponents) else { return nil}
-        
+
         let diff = calendar.dateComponents([.day], from: startDate, to: endDate)
         return diff.day
     }

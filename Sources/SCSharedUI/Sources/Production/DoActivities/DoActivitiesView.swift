@@ -14,7 +14,7 @@ public struct DoActivitiesView: View {
     }
 
     public var body: some View {
-        Group{
+        Group {
             switch viewModel.loadingState.viewLoadingState {
             case .idle, .loading:
                 mainContentView
