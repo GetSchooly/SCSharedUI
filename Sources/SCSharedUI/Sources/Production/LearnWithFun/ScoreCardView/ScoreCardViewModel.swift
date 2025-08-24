@@ -8,7 +8,7 @@ struct ScoreFeedback {
 
 class ScoreCardViewModel: ObservableObject {
     @Published private(set) var feedback: ScoreFeedback?
-    @Published var scoreCardImage: UIImage?
+    var scoreCardImage: UIImage?
     @Published var isShareSheetPresented: Bool = false
 
     init(gained: Int, total: Int) {

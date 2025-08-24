@@ -3,42 +3,30 @@ import SCComponents
 import SCTokens
 
 struct AttendanceCalCardView: View {
-    
-    // variables/properties
     private let width: CGFloat?
     private let height: CGFloat?
-    
-    // your view model
-    private let viewModel: AttendanceCalCardViewModel
-    
-    init(viewModel: AttendanceCalCardViewModel, width: CGFloat = .infinity, height: CGFloat? = Sizing.sizing10x) {
+    @ObservedObject private var viewModel: AttendanceCalCardViewModel
+
+    init(
+        viewModel: AttendanceCalCardViewModel,
+        width: CGFloat = .infinity,
+        height: CGFloat? = Sizing.sizing10x
+    ) {
         self.viewModel = viewModel
         self.width = width
         self.height = height
-        setupUI()
-        initViewModel()
-        Font.loadMyFonts
     }
-    
+
     var body: some View {
         singleDateView
     }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
-    
+
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
-    
+
     private var singleDateView: some View {
         LazyVGrid(columns: columns) {
             Group {
@@ -50,7 +38,7 @@ struct AttendanceCalCardView: View {
         }
         .border(viewModel.header != nil ? Color.royalBlue : Color.grayStroke, width: 0.5)
     }
-    
+
     private var dayView: some View {
         HStack {
             Spacer()
@@ -59,7 +47,7 @@ struct AttendanceCalCardView: View {
             adDivider
         }
     }
-    
+
     private var dateView: some View {
         HStack {
             Spacer()
@@ -67,7 +55,7 @@ struct AttendanceCalCardView: View {
             Spacer()
         }
     }
-    
+
     private var statusView: some View {
         HStack {
             adDivider
@@ -76,7 +64,7 @@ struct AttendanceCalCardView: View {
             Spacer()
         }
     }
-    
+
     private var adDivider: some View {
         Rectangle()
             .fill(viewModel.header != nil ? Color.pantoneWhite : Color.grayStroke)

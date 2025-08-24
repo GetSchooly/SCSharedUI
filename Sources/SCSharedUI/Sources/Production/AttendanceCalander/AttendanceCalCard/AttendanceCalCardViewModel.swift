@@ -1,5 +1,6 @@
 import Foundation
 import SCComponents
+import SCTokens
 import SwiftUI
 
 enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
@@ -31,9 +32,30 @@ enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
         case .upcoming:
             return .lightGray
         case .none:
-            return .clear
+            return .royalBlue10
         case .sunday:
-            return .yellow
+            return .lightGray
+        }
+    }
+
+    var icon: Icons {
+        switch self {
+        case .present:
+            Icons.ic_present
+        case .absent:
+            Icons.ic_absent
+        case .late:
+            Icons.ic_late
+        case .notMarked:
+            Icons.ic_notMarked
+        case .holidays:
+            Icons.ic_festival
+        case .none:
+            Icons.ic_na
+        case .upcoming:
+            Icons.ic_empty
+        case .sunday:
+            Icons.ic_na
         }
     }
 
@@ -59,11 +81,6 @@ class AttendanceCalCardViewModel: ObservableObject {
     init(header: AttendanceCalCardHeader? = nil, item: AttendanceCalCardItem? = nil) {
         self.header = header
         self.item = item
-    }
-
-    // MARK: - Fetching functions
-    func fetchData() {
-        // Do something
     }
 
     @ViewBuilder

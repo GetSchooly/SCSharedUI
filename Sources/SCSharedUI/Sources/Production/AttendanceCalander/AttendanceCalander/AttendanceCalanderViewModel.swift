@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import SCComponents
 import SwiftUICore
+import UIKit
 
 class AttendanceCalanderViewModel: LoadableViewModel<AttendanceCalanderModel> {
     @Published var selectedMonth: SDPickerModel = .init(id: 1, year: 2025, title: "")
@@ -11,6 +12,8 @@ class AttendanceCalanderViewModel: LoadableViewModel<AttendanceCalanderModel> {
     @Published private(set) var studentAttendances: [StudentAttendance] = []
     private lazy var attendanceActivities: AttendanceCalanderService = .init()
     private var cancellables = Set<AnyCancellable>()
+    @Published var isShareSheetPresented: Bool = false
+    @Published var attendaceSheetImage: UIImage?
 
     override init() {
         super.init()

@@ -1,10 +1,6 @@
 import Foundation
 import SCTokens
 
-struct AttendanceCalCardModel: Codable {
-    
-}
-
 struct AttendanceCalCardHeader: Codable {
     let title1: String
     let title2: String

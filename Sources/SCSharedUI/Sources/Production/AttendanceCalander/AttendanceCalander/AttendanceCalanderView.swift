@@ -39,12 +39,22 @@ public struct AttendanceCalanderView: View {
                 topHeaderRightView
             }
             .padding(.bottom, Spacing.spacing1x)
-            headerView
-            wholeMonthView
-            footerStatusView
+            monthSheetView
         }
         .sheet(isPresented: $toShowMonthPicker) {
             monthPickerView
+        }
+        .shareSheet(
+            items: [viewModel.attendaceSheetImage ?? UIImage()],
+            isPresented: $viewModel.isShareSheetPresented
+        )
+    }
+
+    private var monthSheetView: some View {
+        VStack {
+            headerView
+            wholeMonthView
+            footerStatusView
         }
     }
 
@@ -55,10 +65,12 @@ public struct AttendanceCalanderView: View {
                     let itemViewModel = AttendanceCalCardViewModel(item: AttendanceCalCardItem(
                         title1: attendanceData.day,
                         title2: attendanceData.date,
-                        icon: attendanceData.status == .none ? nil : .ic_plus)
+                        icon: attendanceData.status.icon)
                     )
                     AttendanceCalCardView(viewModel: itemViewModel)
-                        .opacity(attendanceData.status == .sunday ? 0.0 : 1)
+                        .opacity(
+                            (attendanceData.status == .sunday || attendanceData.status == .upcoming) ? 0.3 : 1
+                        )
                 }
             }
         }
@@ -83,14 +95,14 @@ public struct AttendanceCalanderView: View {
                     ),
                     spacing: Spacing.spacing2x,
                     icon: .local(
-                        resource: Icons.ic_Fees.value,
+                        resource: Icons.ic_downArrow.value,
                         iconSize: .medium,
                         placement: .right
                     )
                 ) {
                     toShowMonthPicker = true
                 }
-                    .padding(.leading, -Spacing.spacing2x)
+                .padding(.leading, -Spacing.spacing2x)
                 Spacer()
             }
         }
@@ -107,16 +119,17 @@ public struct AttendanceCalanderView: View {
     }
 
     private var topHeaderRightView: some View {
-        HStack(spacing: Spacing.spacing1x) {
-            SDImage(.local(resource: Icons.ic_Fees.value, iconSize: .large))
-                .onTapGesture {
-                    
-                }
+        HStack(spacing: Spacing.spacing2x) {
+            SDImage(.local(resource: Icons.ic_share.value, iconSize: .medium))
+                .pressEffect(onRelease: {
+                    viewModel.attendaceSheetImage = monthSheetView.snapshot()
+                    viewModel.isShareSheetPresented.toggle()
+                })
 
-            SDImage(.local(resource: Icons.ic_Fees.value, iconSize: .large))
-                .onTapGesture {
+            SDImage(.local(resource: Icons.ic_download.value, iconSize: .medium))
+                .pressEffect(onRelease: {
                     
-                }
+                })
         }
     }
 
