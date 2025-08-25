@@ -47,7 +47,7 @@ public enum StudentProfileEndPoint {
 
     static func getStudentAttandance(studentId: Int, month: Int, year: Int) -> APIEndpointFinal {
         return DefaultEndpoint(
-            path: "getStudentAttandance/",
+            path: "getStudentAttandance",
             method: .get,
             headers: headers,
             parameters: [

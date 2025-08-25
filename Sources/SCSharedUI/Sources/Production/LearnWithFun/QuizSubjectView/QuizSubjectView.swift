@@ -18,7 +18,6 @@ public struct QuizSubjectView: View {
     ]
     private let classID: Int
     private let pageLayout: QuizSubjectLayout
-//    private let onTapSubject: ((QuizSubjectModel) -> Void)?
     private let onTapSeeAll:(([QuizSubjectModel]) -> Void)?
 
     public init(
@@ -29,7 +28,6 @@ public struct QuizSubjectView: View {
     ) {
         self.classID = classID
         self.pageLayout = pageLayout
-//        self.onTapSubject = onTapSubject
         self.onTapSeeAll = onTapSeeAll
     }
 

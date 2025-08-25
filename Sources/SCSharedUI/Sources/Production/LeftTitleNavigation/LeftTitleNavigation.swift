@@ -55,7 +55,7 @@ public struct LeftTitleNavigationView: View {
                 SDButton("",
                          buttonType: .noStyle(),
                          icon: .local(
-                            resource: Icons.ic_plus.value,
+                            resource: Icons.ic_plusBlack.value,
                             iconSize: .large,
                             contentMode: .fill
                          )

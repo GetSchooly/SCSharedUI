@@ -67,10 +67,10 @@ struct TeacherProfileCard: View {
     private func contactButtons() -> some View {
         HStack(spacing: Spacing.spacing3x) {
             contactButtonUI(.ic_call) {
-                onTap(.call, teacher.contactNumber ?? "+91-1234567890")
+                onTap(.call, teacher.teacherMobileNo ?? "+91-1234567890")
             }
-            .disabled(teacher.contactNumber == nil)
-            .opacity(teacher.contactNumber == nil ? 0.advanced(by: 0.2) : 1)
+            .disabled(teacher.teacherMobileNo == nil)
+            .opacity(teacher.teacherMobileNo == nil ? 0.advanced(by: 0.2) : 1)
 
             contactButtonUI(.ic_chat) {
                 onTap(.chat, "+91-1234567890")

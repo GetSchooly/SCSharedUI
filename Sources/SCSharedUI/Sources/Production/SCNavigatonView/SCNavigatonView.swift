@@ -3,14 +3,13 @@ import SCTokens
 import SCComponents
 
 public struct SCNavigatonView<Content>: View where Content: View {
-    
     private let title: String
     private let hideBackButton: Bool
     private let rightButtons: [AnyView]
     private let content: Content
     private let isContentShadow: Bool
     public var onTapBack: (() -> Void)?
-    
+
     public init(title: String,
                 hideBackButton: Bool = false,
                 rightButtons: [AnyView] = [],
@@ -24,14 +23,14 @@ public struct SCNavigatonView<Content>: View where Content: View {
         self.onTapBack = onTapBack
         self.content = content()
     }
-    
+
     public var body: some View {
         ZStack(content: {
             VStack {
                 ZStack(alignment: .center) {
                     SDText(title, style: .size400(weight: .semiBold, theme: .primary, alignment: .center))
                         .frame(alignment: .center)
-                    
+
                     HStack(content: {
                         if !hideBackButton {
                             backButton
@@ -48,7 +47,7 @@ public struct SCNavigatonView<Content>: View where Content: View {
         })
         .background(isContentShadow ? Color.appBackground : Color.clear)
     }
-    
+
     private var contentView: some View {
         ZStack(content: {
             content
@@ -56,19 +55,23 @@ public struct SCNavigatonView<Content>: View where Content: View {
         .padding(.top, Spacing.spacing5x)
         .background(isContentShadow ? Color.white : Color.clear)
         .clipShape(
-            .rect(topLeadingRadius: CornerRadius.cornerRadiusBaseView, topTrailingRadius: CornerRadius.cornerRadiusBaseView, style: .continuous)
+            .rect(
+                topLeadingRadius: CornerRadius.cornerRadiusBaseView,
+                topTrailingRadius: CornerRadius.cornerRadiusBaseView,
+                style: .continuous
+            )
         )
         .ignoresSafeArea(edges: .bottom)
         .shadow(.defaultGrayElevation, show: isContentShadow)
     }
-    
+
     private var backButton: some View {
         SDButton("", buttonType: .noStyle(), icon: .local(resource: Icons.ic_back.value, iconSize: .large)) {
             onTapBack?()
         }
         .padding(.leading, Spacing.spacing3x)
     }
-    
+
     @ViewBuilder
     private var righButtonView: some View {
         if rightButtons.isEmpty {

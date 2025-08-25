@@ -36,9 +36,9 @@ public struct AttendanceCalanderView: View {
         VStack(spacing: Spacing.spacing0x) {
             HStack(alignment: .top) {
                 topHeaderLeftView
+                Spacer()
                 topHeaderRightView
             }
-            .padding(.bottom, Spacing.spacing1x)
             monthSheetView
         }
         .sheet(isPresented: $toShowMonthPicker) {
@@ -52,37 +52,6 @@ public struct AttendanceCalanderView: View {
 
     private var monthSheetView: some View {
         VStack {
-            headerView
-            wholeMonthView
-            footerStatusView
-        }
-    }
-
-    private var wholeMonthView: some View {
-        ScrollView(.vertical) {
-            VStack(spacing: Spacing.spacing0x) {
-                ForEach(viewModel.calendarData, id: \.date) { attendanceData in
-                    let itemViewModel = AttendanceCalCardViewModel(item: AttendanceCalCardItem(
-                        title1: attendanceData.day,
-                        title2: attendanceData.date,
-                        icon: attendanceData.status.icon)
-                    )
-                    AttendanceCalCardView(viewModel: itemViewModel)
-                        .opacity(
-                            (attendanceData.status == .sunday || attendanceData.status == .upcoming) ? 0.3 : 1
-                        )
-                }
-            }
-        }
-    }
-
-    private var topHeaderLeftView: some View {
-        VStack(alignment: .leading, spacing: Spacing.spacing0x) {
-            SDText(
-                viewModel.currentAssessmentYear,
-                style: .size200(weight: .medium, theme: .secondry, alignment: .leading)
-            )
-
             HStack {
                 SDButton(
                     viewModel.selectedMonth.title,
@@ -105,6 +74,36 @@ public struct AttendanceCalanderView: View {
                 .padding(.leading, -Spacing.spacing2x)
                 Spacer()
             }
+
+            headerView
+            wholeMonthView.padding(.top, -Spacing.spacing2x)
+            footerStatusView
+        }
+    }
+
+    private var wholeMonthView: some View {
+        ScrollView(.vertical) {
+            VStack(spacing: Spacing.spacing0x) {
+                ForEach(viewModel.calendarData, id: \.date) { attendanceData in
+                    let itemViewModel = AttendanceCalCardViewModel(item: AttendanceCalCardItem(
+                        title1: attendanceData.day,
+                        title2: attendanceData.date,
+                        icon: attendanceData.status.icon)
+                    )
+                    AttendanceCalCardView(viewModel: itemViewModel)
+                        .opacity(viewModel.dateAppeareance(attendanceData.status))
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
+    }
+
+    private var topHeaderLeftView: some View {
+        VStack(alignment: .leading, spacing: Spacing.spacing0x) {
+            SDText(
+                viewModel.currentAssessmentYear,
+                style: .size200(weight: .medium, theme: .secondry, alignment: .leading)
+            )
         }
     }
 
@@ -122,7 +121,7 @@ public struct AttendanceCalanderView: View {
         HStack(spacing: Spacing.spacing2x) {
             SDImage(.local(resource: Icons.ic_share.value, iconSize: .medium))
                 .pressEffect(onRelease: {
-                    viewModel.attendaceSheetImage = monthSheetView.snapshot()
+                    viewModel.attendaceSheetImage = monthSheetView.background(Color.appwhite).snapshot()
                     viewModel.isShareSheetPresented.toggle()
                 })
 
@@ -156,7 +155,8 @@ public struct AttendanceCalanderView: View {
             footerView1
             footerView2
         }
-        .padding(.vertical, Spacing.spacing6x)
+        .padding(.top, Spacing.spacing6x)
+        .padding(.bottom, Spacing.spacing2x)
     }
 
     private var footerView1: some View {

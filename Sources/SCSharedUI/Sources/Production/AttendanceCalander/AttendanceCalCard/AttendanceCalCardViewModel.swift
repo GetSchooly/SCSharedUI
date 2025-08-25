@@ -8,14 +8,14 @@ enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
         return self
     }
 
-    case present
-    case absent
-    case late
-    case notMarked
-    case holidays
-    case none
-    case upcoming
-    case sunday
+    case present = "present"
+    case absent = "absent"
+    case late = "late"
+    case notMarked = "notmarked"
+    case holidays = "holidays"
+    case none = "none"
+    case upcoming = "upcoming"
+    case sunday = "sunday"
 
     var color: Color {
         switch self {
@@ -68,7 +68,7 @@ enum AttendanceStatus: String, CaseIterable, Identifiable, Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        let raw = (try? container.decode(String.self)) ?? ""
+        let raw = (try? container.decode(String.self))?.lowercased() ?? ""
         self = AttendanceStatus(rawValue: raw) ?? .none
     }
 }

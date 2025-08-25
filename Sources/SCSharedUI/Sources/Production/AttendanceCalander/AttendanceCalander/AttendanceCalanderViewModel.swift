@@ -33,6 +33,7 @@ class AttendanceCalanderViewModel: LoadableViewModel<AttendanceCalanderModel> {
                 switch state {
                 case .loaded(let model):
                     self.studentAttendances = model.studentAttendance
+                    self.setupCurrentMonthCalendarData()
                 default:
                     break
                 }
@@ -52,6 +53,15 @@ class AttendanceCalanderViewModel: LoadableViewModel<AttendanceCalanderModel> {
     var currentAssessmentYear: String {
         let currentYear = Calendar.current.component(.year, from: Date())
         return "\(currentYear)/\(nextYear)"
+    }
+
+    func dateAppeareance(_ status: AttendanceStatus) -> CGFloat {
+        if status == .upcoming {
+            return 0.2
+        } else if status == .sunday {
+            return 0.5
+        }
+        return 1
     }
 }
 
@@ -106,9 +116,9 @@ extension AttendanceCalanderViewModel {
             return .sunday
         }
 
-        let dateString = "\(year)-/\(month)-/\(day)"
+        let dateString = "\(year)-\(month)-\(day)"
         if let studentAttendance = studentAttendances.first(where: { model in
-            model.markAttendance == dateString
+            model.markAttendance == normalizeDate(dateString)
         }) {
             return studentAttendance.isPresent
         }
@@ -172,5 +182,19 @@ extension AttendanceCalanderViewModel {
 
         let diff = calendar.dateComponents([.day], from: startDate, to: endDate)
         return diff.day
+    }
+
+    private func normalizeDate(_ raw: String) -> String? {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-M-d"
+        inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "yyyy-MM-dd"
+
+        if let date = inputFormatter.date(from: raw) {
+            return outputFormatter.string(from: date)
+        }
+        return nil
     }
 }

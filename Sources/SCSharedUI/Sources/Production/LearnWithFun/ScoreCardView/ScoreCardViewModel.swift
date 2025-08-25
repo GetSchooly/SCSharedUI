@@ -10,6 +10,7 @@ class ScoreCardViewModel: ObservableObject {
     @Published private(set) var feedback: ScoreFeedback?
     var scoreCardImage: UIImage?
     @Published var isShareSheetPresented: Bool = false
+    @Published var showScoreCards: Bool = false
 
     init(gained: Int, total: Int) {
         let percent = scorePercentage(gained: gained, total: total)
@@ -48,6 +49,22 @@ class ScoreCardViewModel: ObservableObject {
                 title: "Don’t Give Up 🚀",
                 message: "Every expert was once a beginner. Revisit the basics, and you’ll see big improvements soon."
             )
+        }
+    }
+
+    func shareResultMessage(gained: Int, total: Int) -> String {
+        let percentage = scorePercentage(gained: gained, total: total)
+        switch percentage {
+        case 90...100:
+            return "🎉 I scored \(percentage)%. Almost perfect! 💯"
+        case 80..<90:
+            return "🔥 Great run! I got \(percentage)%."
+        case 70..<80:
+            return "😎 Nice! Scored \(percentage)%."
+        case 50..<70:
+            return "🙂 I scored \(percentage)%. Room to improve!"
+        default:
+            return "💪 I scored \(percentage)%. Next time better!"
         }
     }
 

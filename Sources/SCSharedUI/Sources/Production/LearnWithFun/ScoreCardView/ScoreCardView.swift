@@ -19,6 +19,9 @@ struct ScoreCardView: View {
     var body: some View {
         allComponent
             .navigationBarHidden(true)
+            .onAppear {
+                viewModel.showScoreCards.toggle()
+            }
     }
 
     var allComponent: some View {
@@ -43,7 +46,10 @@ struct ScoreCardView: View {
                 .fill(Color.appwhite)
         })
         .shareSheet(
-            items: [viewModel.scoreCardImage ?? UIImage()],
+            items: [
+                viewModel.scoreCardImage ?? UIImage(),
+                viewModel.shareResultMessage(gained: gained, total: total)
+            ],
             isPresented: $viewModel.isShareSheetPresented
         )
     }
@@ -116,20 +122,26 @@ struct ScoreCardView: View {
                     foregroundColor: .standard,
                     backgroundColor: .bright
                 )
+                .opacity(viewModel.showScoreCards ? 1 : 0)
+                .animation(.easeIn(duration: 1).delay(0), value: viewModel.showScoreCards)
  
                 SDScoreCard(
                     title: "Score",
-                    subTitle: "\(viewModel.scorePercentage(gained: gained, total: total))",
+                    subTitle: "\(viewModel.scorePercentage(gained: gained, total: total))%",
                     foregroundColor: .standard,
                     backgroundColor: .royalBlue
                 )
+                .opacity(viewModel.showScoreCards ? 1 : 0)
+                .animation(.easeIn(duration: 1).delay(1), value: viewModel.showScoreCards)
 
                 SDScoreCard(
                     title: "Timing",
-                    subTitle: "1:45",
+                    subTitle: "\(viewModel.getTimeTakenInMinutes(timeTaken))",
                     foregroundColor: .standard,
                     backgroundColor: .positive
                 )
+                .opacity(viewModel.showScoreCards ? 1 : 0)
+                .animation(.easeIn(duration: 1).delay(2), value: viewModel.showScoreCards)
             }
         }
         .frame(height: Sizing.sizing5x * Sizing.sizing1x)
