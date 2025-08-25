@@ -13,7 +13,9 @@ public struct TodayHomeworkView: View {
     public var body: some View {
         VStack {
             titleAndFindMoreView
-            HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0])
+            HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0], completeHandler: {
+                
+            })
         }
         .onTapGesture {
             onTapCard?()

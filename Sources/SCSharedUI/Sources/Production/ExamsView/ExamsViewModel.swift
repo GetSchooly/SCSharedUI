@@ -1,18 +1,48 @@
 import Foundation
-
-public class ExamsViewModel: ObservableObject {
-    var examDetailList: [ExamsModel] = []
+import SwiftUI
+import Combine
+ class ExamsViewModel: LoadableViewModel<ExamsModel> {
+    @State var isPending: Bool = true
+    let colors: [Color] = [Color.softPink, Color.softYellow, Color.fadedBlue, Color.lightGreen]  // 3 colors
+    private lazy var studentExamScheduleService : StudentExamService = .init()
+    private var cancellables: Set<AnyCancellable> = []
+    @Published private(set) var examDetailList: [ExamDetails] = []
+    @Published private(set) var completedExams: [ExamDetails] = []
+    @Published private(set) var pendingExams: [ExamDetails] = []
     
-    public init() {
-        // Do something
-        
-        examDetailList = [
-            ExamsModel(subject: "English", id: 1, date: "01 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33"),
-            ExamsModel(subject: "Hindi", id: 2, date: "02 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33"),
-            ExamsModel(subject: "Maths", id: 3, date: "03 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33"),
-            ExamsModel(subject: "Science", id: 4, date: "04 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33"),
-            ExamsModel(subject: "History", id: 5, date: "05 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33"),
-            ExamsModel(subject: "Social Science", id: 6, date: "06 April 2025", endTime: "03:30PM", startTime: "12:30PM", mark: "65", passingMark: "33")
-        ]
+    override init() {
+        super.init()
+        examDetailList = ExamsModel.mockExams.examList
+        observeStudentExamsList()
     }
+     
+     private func observeStudentExamsList() {
+         $loadingState
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] loadingState in
+                 guard let self else { return }
+                 switch loadingState {
+                 case .loaded(let model):
+                     examDetailList = model.examList
+                     self.setExamsList()
+                 default: break
+                 }
+             }
+             .store(in: &cancellables)
+     }
+     
+     private func setExamsList() {
+         completedExams = examDetailList.compactMap { $0.isCompletedExam ? $0 : nil }
+         pendingExams = examDetailList.compactMap { $0.isCompletedExam == false ? $0 : nil }
+     }
+     
+     func fetchStudentExamBy(studentId: String, action:String){
+         let publisher = studentExamScheduleService.fetchStudentExamBy(studentId: studentId, action: action)
+         load(publisher: publisher)
+     }
+     
+     
+     
 }
+
+
