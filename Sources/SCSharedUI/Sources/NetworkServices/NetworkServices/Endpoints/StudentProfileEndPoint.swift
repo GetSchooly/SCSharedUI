@@ -44,6 +44,23 @@ public enum StudentProfileEndPoint {
             ]
         )
     }
+    
+    static func completeStudentTask() -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getStudentTaskList",
+            method: .post,
+            headers: headers
+        )
+    }
+    
+    static func getStudentExamList(studentId: String , action:String) -> APIEndpointFinal {
+        return DefaultEndpoint(
+            path: "getStudentExamSchedule",
+            method: .get,
+            headers: headers,
+            parameters: ["studentId": studentId, "action": action]
+        )
+    }
 }
 
 fileprivate var headers: [String: String]? {

@@ -6,7 +6,8 @@ public struct HomeworkView: View {
     @StateObject var viewModel: HomeworkViewModel = .init()
     private let studentId: String
     private let selectedDate: String
-
+    @State var showSheet = false
+    
     public init(studentId: String) {
         self.studentId = studentId
         self.selectedDate = "2025-05-31"
@@ -14,7 +15,7 @@ public struct HomeworkView: View {
 
     public var body: some View {
         Group {
-            switch viewModel.loadingState.viewLoadingState {
+            switch viewModel.getHomeworkVM.loadingState.viewLoadingState {
             case .idle, .loading:
                 mainContentView
                     .shimmer(isLoading: true)
@@ -27,14 +28,37 @@ public struct HomeworkView: View {
             }
         }
         .task {
+            let today = getFormatDate(date: Date())
+            viewModel.fetchStudentHomeworks(studentId: studentId, selectedDate: today)
+        }
+        .onReceive(viewModel.calendarViewModel.$selectedDate) { newDate in
+            let selectedDate = getFormatDate(date: newDate)
+            print(selectedDate)
             viewModel.fetchStudentHomeworks(studentId: studentId, selectedDate: selectedDate)
         }
     }
+    private func getFormatDate(date: Date) -> String {
+            return date.formatted(date: .numeric, time: .omitted)
+                .components(separatedBy: "/").reversed()
+                .joined(separator: "-")
+        }
 
     private var mainContentView: some View {
-        VStack {
-            weekCalendarView
-            contentView
+        ZStack {
+            VStack {
+                weekCalendarView
+                contentView
+            }
+            
+            if showSheet, let task = viewModel.selectedStudentTask {
+                ZStack{
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    HomeworkDetail(task)
+                }
+                .background(Color.clear)
+                .transition(.opacity)
+                .animation(.easeInOut, value: showSheet)
+            }
         }
     }
 
@@ -105,14 +129,20 @@ public struct HomeworkView: View {
         VStack(spacing: Spacing.spacing4x) {
             sectionTitleView("\(title)(\(tasks.count))")
                 .padding(.horizontal, Spacing.spacing4x)
-
+            
             ForEach(tasks) { item in
-                HomeworkCard(studentTask: item)
-                    .onTapGesture {
-                        // TODO: - show homework detail
-                    }
+                HomeworkCard(studentTask: item, completeHandler: {
+                    viewModel.completeStudentTaskBy(studentId: studentId, taskId: "\(item.id)")
+                })
+                .onTapGesture {
+                    // TODO: - show homework detail
+                    viewModel.selectedStudentTask = item
+                    showSheet.toggle()
+                    
+                }
             }
             .padding(.horizontal, Spacing.spacing5x)
+            
         }
     }
 
@@ -134,5 +164,5 @@ public struct HomeworkView: View {
 }
 
 #Preview {
-    HomeworkView(studentId: "141")
+    HomeworkView(studentId: "172")
 }

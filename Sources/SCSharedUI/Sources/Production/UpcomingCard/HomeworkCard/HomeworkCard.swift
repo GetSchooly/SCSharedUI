@@ -4,28 +4,48 @@ import SCComponents
 
 public struct HomeworkCard: View {
     private let studentTask: StudentTask
+    private let completeHandler:(()-> Void?)
+    private var isHomeWorkCompleted: Bool = false
 
-    public init(studentTask: StudentTask) {
+    public init(studentTask: StudentTask, completeHandler: @escaping (()-> Void? )) {
         self.studentTask = studentTask
+        self.completeHandler = completeHandler
+        self.isHomeWorkCompleted = studentTask.isTaskCompleted
     }
 
     public var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading, content: {
-                SDText(
-                    studentTask.subjectName.capitalized,
-                    style: .size100(
-                        weight: .semiBold,
-                        theme: .primary,
-                        alignment: .leading
-                    ),
-                    icon: .local(
-                        resource: Icons.ic_Syllabus.value,
-                        iconSize: .large,
-                        contentMode: .fit,
-                        placement: .left
+                HStack {
+                    SDText(
+                        studentTask.subjectName.capitalized,
+                        style: .size100(
+                            weight: .semiBold,
+                            theme: .primary,
+                            alignment: .leading
+                        ),
+                        icon: .local(
+                            resource: Icons.ic_Syllabus.value,
+                            iconSize: .large,
+                            contentMode: .fit,
+                            placement: .left
+                        )
                     )
-                )
+                    Spacer()
+                    SDButton("",
+                             buttonType: .noStyle(),
+                             icon: .local(
+                                resource:studentTask.isTaskCompleted ? Icons.ic_CheckedBox.value : Icons.ic_EmptyBox.value,
+                                iconSize: .large,
+                                contentMode: .fill
+                             )
+                    ) {
+                        if !isHomeWorkCompleted{
+                            self.completeHandler()
+                        }
+                        
+                    }
+                }
                 .padding(.bottom, Spacing.spacing1x)
 
                 SDText(
@@ -139,14 +159,14 @@ public struct HomeworkCard: View {
 extension HomeworkCard: HasExamples {
     static var examples: [Example] {
         [Example("HomeworkCard", width: 300, height: 300) {
-            HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0])
+            HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0], completeHandler: {})
         }]
     }
 }
 
 #Preview {
     VStack(content: {
-        HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0])
+        HomeworkCard(studentTask: StudentTask.mockTasks.studentTask[0], completeHandler: {})
     })
     .padding()
 }

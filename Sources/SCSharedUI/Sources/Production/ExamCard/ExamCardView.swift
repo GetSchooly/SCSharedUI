@@ -3,21 +3,10 @@ import SCComponents
 import SCTokens
 
 public struct ExamCardView: View {
-    
-    public init() {
-        setupUI()
-        initViewModel()
+    var bgColor: Color = .white
+    public init(_ bgColor: Color = .white) {
+        self.bgColor = bgColor
     }
-    
-    private func setupUI() {
-        // setup for the UI
-    }
-    
-    private func initViewModel() {
-        // setup for the ViewModel
-        // viewModel.fetchData()
-    }
-    
     public var body: some View {
         HStack {
             subjectDateView
@@ -27,7 +16,7 @@ public struct ExamCardView: View {
             timingView
         }
         .padding(Sizing.sizing4x)
-        .background(Color.lightBlue)
+        .background(bgColor)
         .clipShape(RoundedRectangle(cornerRadius: Sizing.sizing5x))
     }
     

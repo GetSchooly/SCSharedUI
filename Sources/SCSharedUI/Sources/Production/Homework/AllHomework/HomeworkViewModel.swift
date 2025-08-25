@@ -1,24 +1,28 @@
 import Foundation
 import SCComponents
 import Combine
+import SwiftUI
 
-class HomeworkViewModel: LoadableViewModel<HomeworkModel> {
+
+class HomeworkViewModel: ObservableObject {
+    @Published var getHomeworkVM = LoadableViewModel<HomeworkModel>()
+    @Published var postCompleteVM = LoadableViewModel<EmptyDataModel>()
     private lazy var studentTaskService: StudentTaskService = .init()
     private var cancellables: Set<AnyCancellable> = []
     @Published private(set) var homeworks: [StudentTask] = []
     lazy var calendarViewModel: CalendarViewModel = CalendarViewModel()
     @Published private(set) var completedHomeworks: [StudentTask] = []
     @Published private(set) var pendingHomeworks: [StudentTask] = []
-
-    override init() {
-        super.init()
+    @Published var selectedStudentTask: StudentTask? = nil
+    
+     init() {
         homeworks = StudentTask.mockTasks.studentTask
         setHomeworks()
         observeStudentHomeworks()
     }
 
     private func observeStudentHomeworks() {
-        $loadingState
+        getHomeworkVM.$loadingState
             .receive(on: DispatchQueue.main)
             .sink { [weak self] loadingState in
                 guard let self else { return }
@@ -26,6 +30,19 @@ class HomeworkViewModel: LoadableViewModel<HomeworkModel> {
                 case .loaded(let model):
                     homeworks = model.studentTask
                     self.setHomeworks()
+                default: break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func observeStudentCompleteHomeworks() {
+        postCompleteVM.$loadingState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loadingState in
+                guard self != nil else { return }
+                switch loadingState {
+                case .loaded(_):break
                 default: break
                 }
             }
@@ -39,7 +56,12 @@ class HomeworkViewModel: LoadableViewModel<HomeworkModel> {
 
     func fetchStudentHomeworks(studentId: String, selectedDate: String) {
         let publisher = studentTaskService.fetchStudentTaskBy(studentId: studentId, selectedDate: selectedDate)
-        load(publisher: publisher)
+        getHomeworkVM.load(publisher: publisher)
+    }
+    
+    func completeStudentTaskBy(studentId: String, taskId: String) {
+        let publisher = studentTaskService.completeStudentTaskBy(data: HomeWorkCompleteInput(studentId: studentId, taskId: taskId))
+        postCompleteVM.load(publisher: publisher)
     }
 }
 
